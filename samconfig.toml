@@ -1,0 +1,11 @@
+version=0.1
+ [default.global.parameters]
+ stack_name = "DeployLambdaApis"
+ 
+ [default.deploy.parameters]
+ stack_name = "DeployLambdaApis"
+ region = "us-east-1"
+ confirm_changeset = false
+ capabilities = "CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM"
+
+ [default.build.parameters]
