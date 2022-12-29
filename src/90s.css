@@ -1,0 +1,133 @@
+body {
+  font-family: sans-serif;
+  color: #333333;
+  background-color: #FFFFFF;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #000000;
+}
+
+a {
+  color: #006699;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  font-family: monospace;
+  background-color: #EFEFEF;
+  padding: 2px 4px;
+}
+
+pre {
+  background-color: #EFEFEF;
+  padding: 10px;
+  overflow: auto;
+}
+
+blockquote {
+  background-color: #EFEFEF;
+  padding: 10px;
+  border-left: 5px solid #006699;
+}
+
+.warning {
+  background-color: #FFEBEB;
+  padding: 10px;
+  border: 1px solid #D54E21;
+}
+
+
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  padding-right: 50px;
+  padding-bottom: 25px;
+}
+
+img {
+  padding-top: 25px;
+  height: 100px;
+}
+
+/* create layer */ 
+
+.create-layer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* create layer buttons */
+.layer-inputs {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: max-content;
+}
+
+.text-input {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+
+.command-description {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: max-content; 
+}
+
+
+
+
+/* hamburger icon */
+
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+}
+
+.line {
+  width: 100%;
+  height: 2px;
+  background-color: #000;
+}
+
+/* mobile menu*/
+
+.mobile-menu {
+  display: flex;
+  align-items: center;
+}
+
+.menu-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  transition: all 0.2s ease-out;
+}
+
+.menu-items.collapsed {
+  height: 0;
+  overflow: hidden;
+}
+
+.menu-items.expanded {
+  height: auto;
+}
+
