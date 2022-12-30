@@ -10,7 +10,8 @@
   flex: 0 0 20%;
   background-color: #eee;
   height: 100vh;
-  width: 150px;
+  max-width: 200px;
+  background-color: #006699;
 }
 
 .sidebar-header {
@@ -22,26 +23,30 @@
   list-style-type: none;
   margin: 0;
   padding: 0;
-  background-color: #f1f1f1;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
   
 .menu a {
   display: block;
-  color: #000;
+  color: #fff;
   padding-bottom: 32px;
   text-decoration: none;
-  width: 100%;
+  font-size: 22px;
 }
 
 .view {
   padding-left: 8px;
+  width: calc(100%-8px);
+  
 }
 
 /* main content */
 
 .main-content {
   flex: 1;
-  padding: 20px;
+  margin-left: 20px;
 }
 
 
@@ -94,6 +99,8 @@ blockquote {
 img {
   width: 100%;
 }
+
+
 
 /* create layer */ 
 
