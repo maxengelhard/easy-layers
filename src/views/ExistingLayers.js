@@ -11,25 +11,54 @@ const ExistingLayers = () => {
     const fetchData = async () => {
      await fetch(`${api_gateway}`)
      .then(result => result.json())
-     .then(result => setLayers(result))
+     .then(result => {
+      const cleanResult = {}
+      result.forEach((layer) => {
+        const name = layer.LayerName.split('-')[0]
+        const versions = layer.LayerName.split('-').slice(1).join('-')
+        if (cleanResult[name]) {
+          const acum_arr = cleanResult[name]
+          acum_arr.push({"version":versions,"data": layer}) 
+          cleanResult[name]=acum_arr
+        }
+        else {
+          cleanResult[name]=[{"version":versions,"data": layer}]
+        }
+      })
+      setLayers(cleanResult)
+      }  
+      )
     }
 
     fetchData()
   },[])
 
   return (
-      <div>
+      <div className='layer-container'>
         <h1>Here are all the layers accross regions</h1>
-        {layers ? layers.map((layer,i) => {
+        <h4>Region: US-EAST 1</h4>
+        {layers ? Object.entries(layers).map((layer,i) => {
+          const library = layer[0]
+          const library_data = layer[1]
           return (
             <div key={i}>
-              <p>Layer Name: {layer.LayerName}</p>
-              <p>Layer ARN: {layer.LayerArn}</p>
-              <p>Created Date: {layer.LatestMatchingVersion.CreatedDate}</p> 
-              <p>Compatible Runtimes: {layer.LatestMatchingVersion.CompatibleRuntimes[0]}</p>
-              <p>Compatible Architectures: {JSON.stringify(layer.LatestMatchingVersion.CompatibleArchitectures)}</p>
+              <p>Library: {library}</p>
+              {library_data.map((version,j) => {
+                const version_data = version.data
+                return (
+                  <div key={j}>
+                  <p>Library Version: {version.version}</p>
+                  <p>Layer ARN: {version_data.LatestMatchingVersion.LayerVersionArn}</p>
+              <p>Created Date: {version_data.LatestMatchingVersion.CreatedDate}</p> 
+              <p>Compatible Runtimes: {version_data.LatestMatchingVersion.CompatibleRuntimes[0]}</p>
+              <p>Compatible Architectures: {JSON.stringify(version_data.LatestMatchingVersion.CompatibleArchitectures)}</p>
+              </div>
+                )
+              })}
+      
             </div>
           )
+          
         })
         
         : null}
