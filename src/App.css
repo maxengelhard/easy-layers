@@ -1,36 +1,128 @@
 
+.App {
+  display: flex;
+  align-items: stretch;
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* sidebar */
+.sidebar {
+  flex: 0 0 20%;
+  background-color: #eee;
+  height: 100vh;
+  width: 150px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.sidebar-header {
+  text-align: center;
+  background-color: #ccc;
+}
+
+.menu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: #f1f1f1;
+}
+  
+.menu a {
+  display: block;
+  color: #000;
+  padding-bottom: 32px;
+  text-decoration: none;
+  width: 100%;
+}
+
+.view {
+  padding-left: 8px;
+}
+
+/* main content */
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+
+
+
+body {
+  font-family: sans-serif;
+  color: #333333;
+  background-color: #FFFFFF;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #000000;
+}
+
+a {
+  color: #006699;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  font-family: monospace;
+  background-color: #EFEFEF;
+  padding: 2px 4px;
+}
+
+pre {
+  background-color: #EFEFEF;
+  padding: 10px;
+  overflow: auto;
+}
+
+blockquote {
+  background-color: #EFEFEF;
+  padding: 10px;
+  border-left: 5px solid #006699;
+}
+
+.warning {
+  background-color: #FFEBEB;
+  padding: 10px;
+  border: 1px solid #D54E21;
+}
+
+
+img {
+  width: 100%;
+}
+
+/* create layer */ 
+
+.create-layer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* create layer buttons */
+.layer-inputs {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: max-content;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.text-input {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+
+.command-description {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: max-content; 
 }
