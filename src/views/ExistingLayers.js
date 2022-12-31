@@ -1,5 +1,7 @@
 import React,{useState,useEffect} from 'react';
 
+import copyLogo from '../copy.png';
+
 
 const ExistingLayers = () => {
   
@@ -37,34 +39,56 @@ const ExistingLayers = () => {
       <div>
         <h1>Here are all the layers accross regions</h1>
         <h3>Region: us-east-1</h3>
-        <div className='layers-container'>
-        {layers ? Object.entries(layers).map((layer,i) => {
-          const library = layer[0]
-          const library_data = layer[1]
-          return (
-            <div key={i}>
-              <h4>Library: {library}</h4>
-              {library_data.map((version,j) => {
-                const version_data = version.data
-                return (
-                  <div key={j}>
-                  <p>Library Version: {version.version}</p>
-                  <p>Layer ARN: {version_data.LatestMatchingVersion.LayerVersionArn}</p>
-              <p>Created Date: {version_data.LatestMatchingVersion.CreatedDate}</p> 
-              <p>Compatible Runtimes: {version_data.LatestMatchingVersion.CompatibleRuntimes[0]}</p>
-              <p>Compatible Architectures: {JSON.stringify(version_data.LatestMatchingVersion.CompatibleArchitectures)}</p>
-              </div>
-                )
-              })}
+            <div className='layers-container'>
+            {layers ? Object.entries(layers).map((layer,i) => {
+              const library = layer[0]
+              const library_data = layer[1]
+              return (
+                <div key={i}>
+                  <h3>Library: {library}</h3>
+                  <table className='existing_layers_table'>
+                    <thead>
+                      <tr>
+                        <th className='layer_version'>Version</th>
+                        <th className='layer_arn'>ARN</th>
+                        {/* <th className='layer_created_date'>Created Date</th> */}
+                        <th className='layer_runtimes'>Runtimes</th>
+                        <th className='layer_architectures'>Architectures</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {library_data.sort((a,b) => {
+                          const aComponents = a.version.split('-').map(x => parseInt(x, 10));
+                          const bComponents = b.version.split('-').map(x => parseInt(x, 10));
 
-              
-      
-            </div>
-          )
-          
-        })
-        
-        : null}
+                          for (let i = 0; i < 3; i++) {
+                            if (aComponents[i] > bComponents[i]) {
+                              return -1;
+                            } else if (aComponents[i] < bComponents[i]) {
+                              return 1;
+                            }
+                          }
+
+                          return 0;
+                      }).map((version,j) => {
+                        const version_data = version.data
+                        return (
+                          <tr key={j}>
+                            <td className='layer_version'>{version.version}</td>
+                            <td className='layer_arn' onClick={() => {navigator.clipboard.writeText(version_data.LatestMatchingVersion.LayerVersionArn)}}><span>{version_data.LatestMatchingVersion.LayerVersionArn}</span> <img src={copyLogo} alt='copylogo'></img></td>
+                            {/* <td className='layer_created_date'>{version_data.LatestMatchingVersion.CreatedDate.substring(0,10)}</td>  */}
+                            <td className='layer_runtimes'>{version_data.LatestMatchingVersion.CompatibleRuntimes[0]}</td>
+                            <td className='layer_architectures'>{JSON.stringify(version_data.LatestMatchingVersion.CompatibleArchitectures)}</td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+              </div>
+              )
+            })
+            
+            : null}
         </div>
       </div>
     );

@@ -141,6 +141,49 @@ img {
 .layers-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
+}
+
+th {
+  text-align: left;
+  font-size: 2vmin;
+}
+
+td {
+  font-size: 2vmin;
+}
+
+td img {
+  width: 2vmin;
+}
+
+.existing_layers_table {
+  table-layout: fixed;
+  width: 95%;
+}
+
+.layer_version {
+  width: 10%;
+}
+
+.layer_arn {
+  width: 60%;
+}
+
+.layer_arn:active span {
+  /* style applied when the component is being clicked or activated */
+  background-color: #eee;
+}
+
+/* .layer_created_date {
+  width: 12.5%;
+} */
+
+.layer_runtimes {
+  width: 15%;
+}
+
+.layer_architectures {
+  width: 15%;
 }
