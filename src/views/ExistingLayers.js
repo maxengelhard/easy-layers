@@ -34,15 +34,16 @@ const ExistingLayers = () => {
   },[])
 
   return (
-      <div className='layer-container'>
+      <div>
         <h1>Here are all the layers accross regions</h1>
-        <h4>Region: US-EAST 1</h4>
+        <h3>Region: us-east-1</h3>
+        <div className='layers-container'>
         {layers ? Object.entries(layers).map((layer,i) => {
           const library = layer[0]
           const library_data = layer[1]
           return (
             <div key={i}>
-              <p>Library: {library}</p>
+              <h4>Library: {library}</h4>
               {library_data.map((version,j) => {
                 const version_data = version.data
                 return (
@@ -55,6 +56,8 @@ const ExistingLayers = () => {
               </div>
                 )
               })}
+
+              
       
             </div>
           )
@@ -62,6 +65,7 @@ const ExistingLayers = () => {
         })
         
         : null}
+        </div>
       </div>
     );
   }

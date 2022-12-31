@@ -109,6 +109,7 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-left: calc(0px - (25% + 10px));
 }
 
 /* create layer buttons */
@@ -137,4 +138,9 @@ img {
 
 /* existing layers */ 
 
-
+.layers-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
