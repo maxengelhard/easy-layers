@@ -18,15 +18,19 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: prd
+      Name: get_layers_api
 
   # define the Lambda function and its code
-  CreateLayer:
+  CreateLayer39:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://easy-layers/functions/src/
+      CodeUri:
+        Bucket: easy-layers
+        Key: functions/deployment_easy_layers.zip
+      FunctionName: create_layer_easy_layers_39
       Handler: create_layer.lambda_handler
       Runtime: python3.9
-      Description: Creates & Checks If A Layer Exists When Someone Submits
+      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.9
       Timeout: 300
       Events:
         ApiEvent:
@@ -34,7 +38,68 @@ Resources:
           Properties:
             RestApiId:
               Ref: ApiGatewayBackend
-            Path: /create_layer
+            Path: /create_layer39
+            Method: post
+      Layers:
+        - arn:aws:lambda:us-east-1:737802338670:layer:jsonschema:1
+        - arn:aws:lambda:us-east-1:737802338670:layer:requests-2-28-1:1
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: arn:aws:logs:us-east-1:737802338670:*
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - arn:aws:logs:us-east-1:737802338670:log-group:/aws/lambda/create_update_python_layers:*
+          - Sid: VisualEditor0
+            Effect: Allow
+            Action:
+              - lambda:ListFunctions
+              - lambda:ListLayerVersions
+              - lambda:ListLayers
+            Resource: "*"
+          - Sid: VisualEditor1
+            Effect: Allow
+            Action:
+              - lambda:GetLayerVersion
+              - lambda:DeleteLayerVersion
+              - lambda:AddLayerVersionPermission
+            Resource: "*"
+          - Sid: VisualEditor2
+            Effect: Allow
+            Action:
+              - s3:PutObject
+              - s3:GetObjectAcl
+              - s3:GetObject
+              - logs:CreateLogStream
+              - lambda:PublishLayerVersion
+              - s3:ListBucket
+              - logs:PutLogEvents
+            Resource:
+              - "*"
+  # define the Lambda function and its code
+  CreateLayer38:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri:
+        Bucket: easy-layers
+        Key: functions/deployment_easy_layers.zip
+      FunctionName: create_layer_easy_layers_38
+      Handler: create_layer.lambda_handler
+      Runtime: python3.8
+      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.8
+      Timeout: 300
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ApiGatewayBackend
+            Path: /create_layer38
             Method: post
       Layers:
         - arn:aws:lambda:us-east-1:737802338670:layer:jsonschema:1
@@ -81,10 +146,13 @@ Resources:
   GetLayers:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: .src/
+      CodeUri:
+        Bucket: easy-layers
+        Key: functions/deployment_easy_layers.zip
       Handler: get_layers.lambda_handler
       Runtime: python3.9
-      Description: Creates & Checks If A Layer Exists When Someone Submits
+      FunctionName: get_layers_easy_layers
+      Description: Grabs all the layers
       Timeout: 60
       Events:
         ApiEvent:
@@ -92,13 +160,8 @@ Resources:
           Properties:
             RestApiId:
               Ref: ApiGatewayBackend
-            Path: /create_layer
+            Path: /get_layers
             Method: get 
-            RequestParameters:
-              - method.request.querystring.library:
-                  Required: true
-              - method.request.querystring.version:
-                  Required: false
       Policies:
         - Statement:
             - Sid: VisualEditor0

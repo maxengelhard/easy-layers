@@ -35,6 +35,9 @@ def lambda_handler(event, context):
         return "This function has no access to Lambda resources, please validate"
     # Create a new layer 
     result = create_new(event , Bucket, Lambda)
+    
+    print(result)
+    
     return result
 
 def create_new(event, Bucket, Lambda):
@@ -47,6 +50,7 @@ def create_new(event, Bucket, Lambda):
     library_install = library if library_version is None else library + "==" + library_version
     # Check if the package  exists 
     max_version = check_if_package_exists(library,library_version,library_install)
+    max_version_and_lib = library + "==" + str(max_version)
     # Then check if Layer exists in the account already
     layer_exists = check_if_layer_exists(max_version,library,library_version)
     # if layer exists return the Layer ARN
@@ -76,15 +80,17 @@ def create_new(event, Bucket, Lambda):
     # make the layer name readable and consistent of an ARN and for S3
     library_and_version=None
     if library_version is None:
-        library_and_version=max_version.replace('==','-')
+        library_and_version=max_version_and_lib.replace('==','-')
     else:
         library_and_version=library_install.replace('==','-')
 
     # Zip the installed libraries
     zip_directory("/tmp/python/" , "/tmp/python.zip")
+    
+    print(library_and_version)
     # Upload the library into S3
     try:
-        Bucket.upload_file("/tmp/python.zip", library_and_version + ".zip")
+        Bucket.upload_file("/tmp/python.zip", "layers_repository/" + library_and_version + ".zip")
     except Exception as e:
         raise e
     # Create a new layer
@@ -92,9 +98,17 @@ def create_new(event, Bucket, Lambda):
         new_layer = Lambda.publish_layer_version(LayerName= library_and_version.replace('.','-'),
                                                      Content= {
                                                         'S3Bucket': 'easy-layers',
-                                                        'S3Key':  library_and_version + ".zip"},
+                                                        'S3Key':  "layers_repository/" + library_and_version + ".zip"},
                                                      CompatibleRuntimes=['python'+ '.'.join(sys.version.split(' ')[0].split('.')[0:2])],
                                                      CompatibleArchitectures=["x86_64", "arm64"])
+        
+        give_permission_to_all = Lambda.add_layer_version_permission(
+                                                    LayerName=library_and_version.replace('.','-'),
+                                                    VersionNumber=new_layer['Version'],
+                                                    StatementId='ShareToAll',
+                                                    Action='lambda:GetLayerVersion',
+                                                    Principal='*'
+                                                )
     except Exception as e:
         raise e
     # Return layer version ARN

@@ -1,7 +1,7 @@
 request_schema={
     "type":"object",
     "properties": {
-        "queryStringParameters": {
+        "body": {
             "type": "object",
             "properties": {
                 "library": {

@@ -2,6 +2,7 @@ body {
   font-family: sans-serif;
   color: #333333;
   background-color: #FFFFFF;
+  padding-bottom: 20px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -52,12 +53,12 @@ blockquote {
 /* sidebar */
 
 .sidebar {
-  flex: 0 0 20%;
+  flex: 0 0 15%;
   background-color: #eee;
   background-color: #006699;
   min-height: 100%;
   position: fixed;
-  max-width: 20%;
+  max-width: 15%;
 }
 
 .sidebar-header {
@@ -97,7 +98,7 @@ img {
 
 .main-content {
   flex: 1;
-  margin-left: calc(25% + 10px);
+  margin-left: calc(20% + 10px);
   padding-right: 10px;
 }
 
@@ -109,7 +110,7 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-left: calc(0px - (25% + 10px));
+  margin-left: calc(0px - (20% + 10px));
 }
 
 /* create layer buttons */

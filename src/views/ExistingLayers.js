@@ -37,7 +37,7 @@ const ExistingLayers = () => {
 
   return (
       <div>
-        <h1>Here are all the layers accross regions</h1>
+        <h1>Existing AWS Lambda Layers</h1>
         <h3>Region: us-east-1</h3>
             <div className='layers-container'>
             {layers ? Object.entries(layers).map((layer,i) => {
@@ -45,7 +45,7 @@ const ExistingLayers = () => {
               const library_data = layer[1]
               return (
                 <div key={i}>
-                  <h3>Library: {library}</h3>
+                  <h3>{library}</h3>
                   <table className='existing_layers_table'>
                     <thead>
                       <tr>
@@ -74,7 +74,7 @@ const ExistingLayers = () => {
                         const version_data = version.data
                         return (
                           <tr key={j}>
-                            <td className='layer_version'>{version.version}</td>
+                            <td className='layer_version'>{version.version.replaceAll('-','.')}</td>
                             <td className='layer_arn' onClick={() => {navigator.clipboard.writeText(version_data.LatestMatchingVersion.LayerVersionArn)}}><span>{version_data.LatestMatchingVersion.LayerVersionArn}</span> <img src={copyLogo} alt='copylogo'></img></td>
                             {/* <td className='layer_created_date'>{version_data.LatestMatchingVersion.CreatedDate.substring(0,10)}</td>  */}
                             <td className='layer_runtimes'>{version_data.LatestMatchingVersion.CompatibleRuntimes[0]}</td>
