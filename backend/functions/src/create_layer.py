@@ -8,7 +8,7 @@ import urllib.request
 from zipfile import ZipFile
 from lambda_decorators import json_http_resp, load_json_body,json_schema_validator,cors_headers
 from request_schema import request_schema
-import requestss
+import requests
 import platform
 
 try:
