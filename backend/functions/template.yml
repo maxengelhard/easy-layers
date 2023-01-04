@@ -30,7 +30,8 @@ Resources:
       FunctionName: create_layer_easy_layers_39
       Handler: create_layer.lambda_handler
       Runtime: python3.9
-      Architectures: x86_64
+      Architectures: 
+        - x86_64
       Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.9
       Timeout: 300
       Events:
@@ -92,7 +93,8 @@ Resources:
       FunctionName: create_layer_easy_layers_38
       Handler: create_layer.lambda_handler
       Runtime: python3.8
-      Architectures: x86_64
+      Architectures: 
+        - x86_64
       Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.8
       Timeout: 300
       Events:
@@ -155,7 +157,8 @@ Resources:
       FunctionName: create_layer_easy_layers_39
       Handler: create_layer.lambda_handler
       Runtime: python3.9
-      Architectures: arm64
+      Architectures: 
+        - arm64
       Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.9
       Timeout: 300
       Events:
@@ -217,7 +220,8 @@ Resources:
       FunctionName: create_layer_easy_layers_38
       Handler: create_layer.lambda_handler
       Runtime: python3.8
-      Architectures: arm64
+      Architectures: 
+        - arm64
       Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.8
       Timeout: 300
       Events:
