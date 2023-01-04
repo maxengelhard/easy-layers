@@ -27,7 +27,7 @@ Resources:
       CodeUri:
         Bucket: easy-layers
         Key: functions/src/deployment_easy_layers.zip
-      FunctionName: create_layer_easy_layers_39
+      FunctionName: create_layer_easy_layers_39x86
       Handler: create_layer.lambda_handler
       Runtime: python3.9
       Architectures: 
@@ -90,7 +90,7 @@ Resources:
       CodeUri:
         Bucket: easy-layers
         Key: functions/src/deployment_easy_layers.zip
-      FunctionName: create_layer_easy_layers_38
+      FunctionName: create_layer_easy_layers_38x86
       Handler: create_layer.lambda_handler
       Runtime: python3.8
       Architectures: 
@@ -154,7 +154,7 @@ Resources:
       CodeUri:
         Bucket: easy-layers
         Key: functions/src/deployment_easy_layers.zip
-      FunctionName: create_layer_easy_layers_39
+      FunctionName: create_layer_easy_layers_39arm
       Handler: create_layer.lambda_handler
       Runtime: python3.9
       Architectures: 
@@ -217,7 +217,7 @@ Resources:
       CodeUri:
         Bucket: easy-layers
         Key: functions/src/deployment_easy_layers.zip
-      FunctionName: create_layer_easy_layers_38
+      FunctionName: create_layer_easy_layers_38arm
       Handler: create_layer.lambda_handler
       Runtime: python3.8
       Architectures: 
