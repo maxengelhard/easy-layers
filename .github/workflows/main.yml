@@ -10,20 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@main
-    - uses: jakejarvis/s3-sync-action@master
-      with:
-        args: --follow-symlinks --delete --exclude '.git/*'
-      env:
-        AWS_S3_BUCKET: 'easy-layers'
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        SOURCE_DIR: './backend/functions'      # optional: defaults to entire repository
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-region: us-east-1
         role-to-assume: arn:aws:iam::737802338670:role/my-github-actions-role
         role-session-name: MySessionName
+    - name: Copy files to the s3 backend bucket
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers/functions
+    - name: Copy files to the frontend-bucket
+      run:
+        aws s3 sync './build' s3://easy-layers-front-end
     - name: Deploy to AWS CloudFormation
       uses: aws-actions/aws-cloudformation-github-deploy@v1
       with:
