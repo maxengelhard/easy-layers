@@ -52,8 +52,8 @@ const ExistingLayers = () => {
                         <th className='layer_version'>Version</th>
                         <th className='layer_arn'>ARN</th>
                         {/* <th className='layer_created_date'>Created Date</th> */}
-                        <th className='layer_runtimes'>Runtimes</th>
-                        <th className='layer_architectures'>Architectures</th>
+                        <th className='layer_runtimes'>Runtime</th>
+                        {/* <th className='layer_architectures'>Architectures</th> */}
                       </tr>
                     </thead>
                     <tbody>
@@ -78,7 +78,7 @@ const ExistingLayers = () => {
                             <td className='layer_arn' onClick={() => {navigator.clipboard.writeText(version_data.LatestMatchingVersion.LayerVersionArn)}}><span>{version_data.LatestMatchingVersion.LayerVersionArn}</span> <img src={copyLogo} alt='copylogo'></img></td>
                             {/* <td className='layer_created_date'>{version_data.LatestMatchingVersion.CreatedDate.substring(0,10)}</td>  */}
                             <td className='layer_runtimes'>{version_data.LatestMatchingVersion.CompatibleRuntimes[0]}</td>
-                            <td className='layer_architectures'>{JSON.stringify(version_data.LatestMatchingVersion.CompatibleArchitectures)}</td>
+                            {/* <td className='layer_architectures'>{JSON.stringify(version_data.LatestMatchingVersion.CompatibleArchitectures)}</td> */}
                           </tr>
                         )
                       })}

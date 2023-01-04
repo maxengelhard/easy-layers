@@ -8,7 +8,8 @@ import urllib.request
 from zipfile import ZipFile
 from lambda_decorators import json_http_resp, load_json_body,json_schema_validator,cors_headers
 from request_schema import request_schema
-import requests
+import requestss
+import platform
 
 try:
     from packaging.version import parse
@@ -88,6 +89,7 @@ def create_new(event, Bucket, Lambda):
     zip_directory("/tmp/python/" , "/tmp/python.zip")
     
     print(library_and_version)
+    machine = 'arm64' if platform.machine() == 'aarch64' else platform.machine()
     # Upload the library into S3
     try:
         Bucket.upload_file("/tmp/python.zip", "layers_repository/" + library_and_version + ".zip")
@@ -100,7 +102,7 @@ def create_new(event, Bucket, Lambda):
                                                         'S3Bucket': 'easy-layers',
                                                         'S3Key':  "layers_repository/" + library_and_version + ".zip"},
                                                      CompatibleRuntimes=['python'+ '.'.join(sys.version.split(' ')[0].split('.')[0:2])],
-                                                     CompatibleArchitectures=["x86_64", "arm64"])
+                                                     CompatibleArchitectures=[machine])
         
         give_permission_to_all = Lambda.add_layer_version_permission(
                                                     LayerName=library_and_version.replace('.','-'),
