@@ -30,7 +30,7 @@ jobs:
         role-to-assume: arn:aws:iam::737802338670:role/CreateOpenIDConnect-Role-1TE6U38TD5Z4X
         role-session-name: MySessionName
     - name: zip backend files
-      run: zip ./backend/functions/src/deployment_easy_layers.zip ./backend/functions/src
+      run: zip ./backend/functions/src/deployment_easy_layers.zip ./backend/functions/src/*
     - name: Copy files to the s3 backend bucket
       run:
         aws s3 sync './backend/functions' s3://easy-layers/functions
