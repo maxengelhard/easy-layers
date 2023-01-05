@@ -5,7 +5,7 @@ import copyLogo from '../copy.png';
 
 const ExistingLayers = () => {
   
-  const api_gateway = 'https://lzxbibmw0l.execute-api.us-east-1.amazonaws.com/Stage/get_layers'
+  const api_gateway = 'https://q6dgudca9d.execute-api.us-east-1.amazonaws.com/Stage/get_layers'
 
   const [layers,setLayers] = useState(false) 
   
