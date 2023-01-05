@@ -21,6 +21,8 @@ jobs:
         node-version: '12.x'
     - name: Install dependencies
       run: npm install
+    - name: Build folder
+      run: npm run build
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -33,8 +35,8 @@ jobs:
     - name: Copy files to the frontend-bucket
       run:
         aws s3 sync './build' s3://easy-layers-front-end
-    - name: Deploy to AWS CloudFormation
-      uses: aws-actions/aws-cloudformation-github-deploy@v1
-      with:
-        name: DeployLambdaAPIs
-        template: https://easy-layers.s3.amazonaws.com/functions/template.yml
+#     - name: Deploy to AWS CloudFormation
+#       uses: aws-actions/aws-cloudformation-github-deploy@v1
+#       with:
+#         name: DeployLambdaAPIs
+#         template: https://easy-layers.s3.amazonaws.com/functions/template.yml
