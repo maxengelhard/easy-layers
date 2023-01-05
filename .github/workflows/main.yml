@@ -29,10 +29,10 @@ jobs:
         role-session-name: MySessionName
     - name: Copy files to the s3 backend bucket
       run:
-        aws s3 sync /backend/functions s3://easy-layers/functions
+        aws s3 sync './backend/functions' s3://easy-layers/functions
     - name: Copy files to the frontend-bucket
       run:
-        aws s3 sync /build s3://easy-layers-front-end
+        aws s3 sync './build' s3://easy-layers-front-end
     - name: Deploy to AWS CloudFormation
       uses: aws-actions/aws-cloudformation-github-deploy@v1
       with:
