@@ -46,14 +46,29 @@ def create_new(event, Bucket, Lambda):
     body =  event["body"]
     library = body["library"]
     library_version = body.get("version")
+
+    machine = 'arm64' if platform.machine() == 'aarch64' else platform.machine()
+    run_time = 'python' + '.'.join(sys.version.split(' ')[0].split('.')[0:2])
+    run_time_dash = 'py' + ''.join(sys.version.split(' ')[0].split('.')[0:2]) 
+
     
     # get the library name and if it has versions make it like such requests==2.28.1
     library_install = library if library_version is None else library + "==" + library_version
     # Check if the package  exists 
     max_version = check_if_package_exists(library,library_version,library_install)
     max_version_and_lib = library + "==" + str(max_version)
+
+    # make the layer name readable and consistent of an ARN and for S3
+    library_and_version=None
+    if library_version is None:
+        library_and_version=max_version_and_lib.replace('==','-')
+    else:
+        library_and_version=library_install.replace('==','-')
+    
+    layer_name =  (library_and_version + '-' + run_time_dash + '-' + machine[0:3]).replace('.','-')
+
     # Then check if Layer exists in the account already
-    layer_exists = check_if_layer_exists(max_version,library,library_version)
+    layer_exists = check_if_layer_exists(layer_name)
     # if layer exists return the Layer ARN
     if layer_exists:
         return {"Layer ARN: ": layer_exists}
@@ -75,37 +90,28 @@ def create_new(event, Bucket, Lambda):
     dir_size = dir_size if len(dir_size.split("K"))<2 else float(dir_size.split("K")[0])/1000
     
     if int(float(dir_size)) >= 250:
-        raise ValueError( "Couldn't run. Layer size is over limit.")
-    
-    
-    # make the layer name readable and consistent of an ARN and for S3
-    library_and_version=None
-    if library_version is None:
-        library_and_version=max_version_and_lib.replace('==','-')
-    else:
-        library_and_version=library_install.replace('==','-')
+        raise ValueError( "Couldn't run. Layer size is over limit.") 
 
     # Zip the installed libraries
     zip_directory("/tmp/python/" , "/tmp/python.zip")
     
-    print(library_and_version)
-    machine = 'arm64' if platform.machine() == 'aarch64' else platform.machine()
+
     # Upload the library into S3
     try:
-        Bucket.upload_file("/tmp/python.zip", "layers_repository/" + library_and_version + ".zip")
+        Bucket.upload_file("/tmp/python.zip", "layers_repository/" + layer_name + ".zip")
     except Exception as e:
         raise e
     # Create a new layer
     try:
-        new_layer = Lambda.publish_layer_version(LayerName= library_and_version.replace('.','-'),
+        new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                      Content= {
                                                         'S3Bucket': 'easy-layers',
-                                                        'S3Key':  "layers_repository/" + library_and_version + ".zip"},
-                                                     CompatibleRuntimes=['python'+ '.'.join(sys.version.split(' ')[0].split('.')[0:2])],
+                                                        'S3Key':  "layers_repository/" + layer_name + ".zip"},
+                                                     CompatibleRuntimes=[run_time],
                                                      CompatibleArchitectures=[machine])
         
         give_permission_to_all = Lambda.add_layer_version_permission(
-                                                    LayerName=library_and_version.replace('.','-'),
+                                                    LayerName=layer_name,
                                                     VersionNumber=new_layer['Version'],
                                                     StatementId='ShareToAll',
                                                     Action='lambda:GetLayerVersion',
@@ -150,14 +156,7 @@ def check_if_package_exists(package,package_version,package_install):
     
     
 
-def check_if_layer_exists(max_version,package,package_version):
-    layer_name=None
-    
-    if package_version is not None:
-        layer_name=package + '-' + package_version.replace('.','-')
-    else:
-        layer_name = (package + "==%s" % max_version).replace('==','-').replace('.','-')
-        
+def check_if_layer_exists(layer_name):
     try:
         list_layer_version = Lambda.list_layer_versions(LayerName=layer_name)["LayerVersions"][0]["LayerVersionArn"]
         return list_layer_version
