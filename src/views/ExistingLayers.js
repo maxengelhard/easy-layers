@@ -9,7 +9,7 @@ const ExistingLayers = () => {
   
   const api_gateway = 'https://q6dgudca9d.execute-api.us-east-1.amazonaws.com/Stage/get_layers'
 
-  const [layers,setLayers] = useState(false) 
+  const [layers,setLayers] = useState(false)
   
   useEffect(() => {
     const fetchData = async () => {
@@ -42,9 +42,10 @@ const ExistingLayers = () => {
       <div>
         <h1>Existing AWS Lambda Layers</h1>
         <DropdownMenu/>
-        <h3>Region: us-east-1</h3>
             <div className='layers-container'>
-            {layers ? Object.entries(layers).map((layer,i) => {
+            {layers ?
+            
+            Object.entries(layers).map((layer,i) => {
               const library = layer[0]
               const library_data = layer[1]
               return (
@@ -91,10 +92,11 @@ const ExistingLayers = () => {
               </div>
               )
             })
-            
-            : <div class="loading">
-                <div class="loading-spinner"></div>
-              </div>
+            :  
+            <div className="loading">
+              <div className="loading-spinner"></div>
+            </div> 
+          
             }
         </div>
       </div>

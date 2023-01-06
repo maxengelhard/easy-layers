@@ -220,10 +220,12 @@ td img {
 /* loading */
 
 .loading {
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 50vh;
+  top: 40%;
+  left: 50%;
 }
 
 .loading-spinner {
