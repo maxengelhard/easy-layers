@@ -1,12 +1,10 @@
 import React, { useState , useEffect} from 'react';
-import regions from './regions'
 
-const DropdownMenu = () => {
-  const items = regions['regions'].map((region) => region['attributes']['aws:region']).sort((a,b) => a > b ? 1: -1)
+const DropdownMenu = ({items,defaultValue,title}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredItems, setFilteredItems] = useState(items); // assume items is an array of menu items
-  const [region,setRegion] = useState('us-east-1')
+  const [filter,setFilter] = useState(defaultValue)
   
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -33,8 +31,8 @@ const DropdownMenu = () => {
 
   return (
     <div className="dropdown">
-        <div>Region</div>
-        <button onClick={toggleMenu}>{region}</button>
+        <div>{title}</div>
+        <button onClick={toggleMenu}>{filter}</button>
       <ul className={`dropdown-menu ${isOpen ? 'show' : ''}`}>
         <li className="dropdown-search">
           <input
@@ -45,7 +43,7 @@ const DropdownMenu = () => {
           />
         </li>
         {filteredItems.map(item => (
-          <li className="dropdown-item" key={item} onClick={() => setRegion(item)}>
+          <li className="dropdown-item" key={item} onClick={() => setFilter(item)}>
             {item}
           </li>
         ))}

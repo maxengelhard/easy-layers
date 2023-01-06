@@ -4,6 +4,8 @@ import copyLogo from '../copy.png';
 
 /* components */
 import DropdownMenu from '../components/dropDownMenu';
+import regionsJson from '../components/regions'
+/* filters */
 
 const ExistingLayers = () => {
   
@@ -38,13 +40,15 @@ const ExistingLayers = () => {
     fetchData()
   },[])
 
+  const regions = regionsJson['regions'].map((region) => region['attributes']['aws:region']).sort((a,b) => a > b ? 1: -1)
+  
+
   return (
       <div>
         <h1>Existing AWS Lambda Layers</h1>
-        <DropdownMenu/>
+        <DropdownMenu items={regions} defaultValue={'us-east-1'} title={'Region'}/>
             <div className='layers-container'>
             {layers ?
-            
             Object.entries(layers).map((layer,i) => {
               const library = layer[0]
               const library_data = layer[1]
