@@ -2,6 +2,8 @@ import React,{useState,useEffect} from 'react';
 
 import copyLogo from '../copy.png';
 
+/* components */
+import DropdownMenu from '../components/dropDownMenu';
 
 const ExistingLayers = () => {
   
@@ -39,6 +41,7 @@ const ExistingLayers = () => {
   return (
       <div>
         <h1>Existing AWS Lambda Layers</h1>
+        <DropdownMenu/>
         <h3>Region: us-east-1</h3>
             <div className='layers-container'>
             {layers ? Object.entries(layers).map((layer,i) => {
@@ -89,7 +92,10 @@ const ExistingLayers = () => {
               )
             })
             
-            : null}
+            : <div class="loading">
+                <div class="loading-spinner"></div>
+              </div>
+            }
         </div>
       </div>
     );
