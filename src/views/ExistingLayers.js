@@ -17,7 +17,8 @@ const ExistingLayers = () => {
       const cleanResult = {}
       result.forEach((layer) => {
         const name = layer.LayerName.split('-')[0]
-        const versions = layer.LayerName.split('-').slice(1).join('-')
+        const version_no_py = layer.LayerName.split('-py')[0]
+        const versions = version_no_py.split('-').slice(1).join('-')
         if (cleanResult[name]) {
           const acum_arr = cleanResult[name]
           acum_arr.push({"version":versions,"data": layer}) 
@@ -45,7 +46,7 @@ const ExistingLayers = () => {
               const library_data = layer[1]
               return (
                 <div key={i}>
-                  <h3>{library}</h3>
+                  <h4>{library}</h4>
                   <table className='existing_layers_table'>
                     <thead>
                       <tr>
@@ -53,7 +54,7 @@ const ExistingLayers = () => {
                         <th className='layer_arn'>ARN</th>
                         {/* <th className='layer_created_date'>Created Date</th> */}
                         <th className='layer_runtimes'>Runtime</th>
-                        {/* <th className='layer_architectures'>Architectures</th> */}
+                        <th className='layer_architectures'>Architectures</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -78,7 +79,7 @@ const ExistingLayers = () => {
                             <td className='layer_arn' onClick={() => {navigator.clipboard.writeText(version_data.LatestMatchingVersion.LayerVersionArn)}}><span>{version_data.LatestMatchingVersion.LayerVersionArn}</span> <img src={copyLogo} alt='copylogo'></img></td>
                             {/* <td className='layer_created_date'>{version_data.LatestMatchingVersion.CreatedDate.substring(0,10)}</td>  */}
                             <td className='layer_runtimes'>{version_data.LatestMatchingVersion.CompatibleRuntimes[0]}</td>
-                            {/* <td className='layer_architectures'>{JSON.stringify(version_data.LatestMatchingVersion.CompatibleArchitectures)}</td> */}
+                            <td className='layer_architectures'>{JSON.stringify(version_data.LatestMatchingVersion.CompatibleArchitectures) ? JSON.stringify(version_data.LatestMatchingVersion.CompatibleArchitectures).slice(1,-1).replaceAll('"','') : null}</td>
                           </tr>
                         )
                       })}

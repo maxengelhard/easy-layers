@@ -42,6 +42,18 @@ blockquote {
   border: 1px solid #D54E21;
 }
 
+h1 {
+  font-size: 4vw;
+}
+
+h3 {
+  font-size: 3vw;
+}
+
+h4 {
+  font-size: 2.25vw;
+}
+
 
 .App {
   display: flex;
@@ -81,7 +93,7 @@ blockquote {
   color: #fff;
   padding-bottom: 32px;
   text-decoration: none;
-  font-size: 22px;
+  font-size: 2vw;
 }
 
 .view {
@@ -98,7 +110,8 @@ img {
 
 .main-content {
   flex: 1;
-  margin-left: calc(20% + 10px);
+  margin-left: calc(15%);
+  padding-left: 15px;
   padding-right: 10px;
 }
 
@@ -146,9 +159,27 @@ img {
   justify-content: center;
 }
 
-th {
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  border: 1px solid #dddddd;
   text-align: left;
+  padding: 8px;
+}
+
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  background-color: #dddddd;
   font-size: 2vmin;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
 }
 
 td {
@@ -161,7 +192,7 @@ td img {
 
 .existing_layers_table {
   table-layout: fixed;
-  width: 95%;
+  width: 100%;
 }
 
 .layer_version {
@@ -169,7 +200,7 @@ td img {
 }
 
 .layer_arn {
-  width: 60%;
+  width: 50%;
 }
 
 .layer_arn:active span {
@@ -177,14 +208,11 @@ td img {
   background-color: #eee;
 }
 
-/* .layer_created_date {
-  width: 12.5%;
-} */
 
 .layer_runtimes {
   width: 15%;
 }
 
 .layer_architectures {
-  width: 15%;
+  width: 20%;
 }
