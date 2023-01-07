@@ -6,6 +6,11 @@ const DropdownMenu = ({items,defaultValue,title}) => {
   const [filteredItems, setFilteredItems] = useState(items); // assume items is an array of menu items
   const [filter,setFilter] = useState(defaultValue)
   
+  if (defaultValue==='library') {
+    console.log(items)
+  }
+  
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   }
@@ -42,11 +47,15 @@ const DropdownMenu = ({items,defaultValue,title}) => {
             onChange={handleSearchChange}
           />
         </li>
-        {filteredItems.map(item => (
-          <li className="dropdown-item" key={item} onClick={() => setFilter(item)}>
+        {filteredItems.map(item => {
+            const item_x = item === 'Select all' ? 'All' : item
+            return (
+          <li className="dropdown-item" key={item_x} onClick={() => setFilter(item_x)}>
             {item}
           </li>
-        ))}
+            )
+        }
+        )}
       </ul>
     </div>
   );

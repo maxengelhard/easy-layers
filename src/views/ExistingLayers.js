@@ -46,7 +46,18 @@ const ExistingLayers = () => {
   return (
       <div>
         <h1>Existing AWS Lambda Layers</h1>
-        <DropdownMenu items={regions} defaultValue={'us-east-1'} title={'Region'}/>
+        <table className='filter_table'>
+                    <thead>
+                      <tr className='filters'>
+                        <th className='region_filter'><DropdownMenu items={regions} defaultValue={'us-east-1'} title={'Region'}/></th>
+                        {layers ? 
+                        <th className='library_filter'><DropdownMenu items={['Select all'].concat(Object.entries(layers).map((layer) => layer[0]))} defaultValue={'All'} title={'Library'}/>{}</th>
+                        : <th className='library_filter'>Loading...</th> } 
+                        <th className='runtime_filter'><DropdownMenu items={['Select all','python3.9','python3.8']} defaultValue={'All'} title={'Runtime'}/></th>
+                        <th className='architecture_filter'><DropdownMenu items={['Select all','x86_64','arm64']} defaultValue={'All'} title={'Architecture'}/></th>
+                      </tr>
+                    </thead>
+        </table>
             <div className='layers-container'>
             {layers ?
             Object.entries(layers).map((layer,i) => {
