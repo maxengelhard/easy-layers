@@ -114,7 +114,7 @@ const ExistingLayers = () => {
                         <th className='layer_arn'>ARN</th>
                         {/* <th className='layer_created_date'>Created Date</th> */}
                         <th className='layer_runtimes'>Runtime</th>
-                        <th className='layer_architectures'>Architectures</th>
+                        <th className='layer_architectures'>Architecture</th>
                       </tr>
                     </thead>
                     <tbody>

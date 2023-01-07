@@ -43,15 +43,15 @@ blockquote {
 }
 
 h1 {
-  font-size: 4vw;
+  font-size: min(max(22px, 4vw), 32px);
 }
 
 h3 {
-  font-size: 3vw;
+  font-size: min(max(18px, 3vw), 26px);
 }
 
 h4 {
-  font-size: 2.25vw;
+  font-size: min(max(14px, 2.5vw), 20px);
 }
 
 
@@ -93,7 +93,7 @@ h4 {
   color: #fff;
   padding-bottom: 32px;
   text-decoration: none;
-  font-size: 2vw;
+  font-size: min(max(14px, 2vw), 20px);
 }
 
 .view {
@@ -115,6 +115,14 @@ img {
   padding-right: 10px;
 }
 
+.title {
+  padding: 0%;
+}
+
+.sub_title {
+  margin: 5px;
+}
+
 
 /* create layer */ 
 
@@ -123,8 +131,9 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-left: calc(0px - (20% + 10px));
 }
+
+
 
 /* create layer buttons */
 .layer-inputs {
@@ -134,11 +143,20 @@ img {
   width: max-content;
 }
 
+.set_conditions_home {
+  margin-top: 18px;
+}
+
+
+caption {
+  font-size: min(max(18px, 3vw), 26px);
+}
+
 .text-input {
   display: flex;
   justify-content: space-between;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: min(max(10px, 1vw), 16px);
+  padding-bottom: min(max(10px, 1vw), 16px);
 }
 
 
@@ -147,6 +165,29 @@ img {
   justify-content: center;
   flex-direction: column;
   width: max-content; 
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin: min(max(10px, 1vw), 16px);
+}
+
+.input-group label {
+  font-size: min(max(14px, 2vw), 20px);
+  margin-bottom: min(max(10px, 1vw), 16px);
+}
+
+.input-group input {
+  font-size: min(max(14px, 2vw), 20px);
+  padding: min(max(12px, 1.25vw), 18px);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+form {
+  margin-top: min(max(14px, 2vw), 20px);
+  margin-bottom: min(max(14px, 2vw), 20px);
 }
 
 
@@ -250,14 +291,13 @@ td img {
 }
 
 
-
-
 /* drop down menu */
 
 .dropdown {
   position: relative;
   display: inline-block;
   width: 100%;
+  font-size: min(max(14px, 2vw), 20px);
 }
 
 .dropdown-menu {
@@ -271,7 +311,7 @@ td img {
   padding: 5px 0;
   margin: 2px 0 0;
   list-style: none;
-  font-size: 14px;
+  font-size: min(max(14px, 2vw), 20px);
   background-color: #ffffff;
   border: 1px solid #cccccc;
   border: 1px solid rgba(0, 0, 0, 0.15);
@@ -333,4 +373,5 @@ td img {
 
 .dropdown button {
   width: 100%;
+  font-size: min(max(14px, 2vw), 20px);
 }
