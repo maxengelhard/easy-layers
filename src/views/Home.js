@@ -30,6 +30,7 @@ const Home = () => {
         <h3 className='sub_title'>
         Making AWS layers as easy as pip install
         </h3>
+        <div className='make-a-layer'>
         <table className='set_conditions_home'>
           <caption>Select Your Conditions</caption>
                     <thead>
@@ -49,6 +50,7 @@ const Home = () => {
                     </thead>
         </table>
         <InstallBar />
+      </div>
       </div>
     );
   }

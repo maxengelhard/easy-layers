@@ -97,7 +97,7 @@ h4 {
 }
 
 .view {
-  padding-left: 8px;
+  padding-left: 10px;
   width: calc(100%-8px);
 }
 
@@ -131,9 +131,16 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 90%;
+  padding-left: 5%;
 }
 
-
+.make-a-layer {
+  width: 100%;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
 /* create layer buttons */
 .layer-inputs {
@@ -155,6 +162,7 @@ img {
   flex-direction: column;
   margin-top: min(max(14px, 2vw), 20px);
   margin-bottom: min(max(14px, 2vw), 20px);
+  padding-right: 10px;
 }
 
 /* .third-column {
@@ -168,6 +176,26 @@ img {
   height: 25%;
   width: 100%;
   margin: min(max(10px, 1vw), 16px);
+  font-size: min(max(14px, 2vw), 20px); 
+}
+
+.shake {
+  animation: shake 0.5s;
+  animation-iteration-count: 1;
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
 
 .set_conditions_home {
@@ -227,6 +255,8 @@ form {
   margin-top: min(max(14px, 2vw), 20px);
   margin-bottom: min(max(14px, 2vw), 20px);
 }
+
+
 
 
 /* existing layers */ 
@@ -359,6 +389,8 @@ td img {
 
 .dropdown-menu.show {
   display: block;
+  max-height: 300px;
+  overflow: auto;
 }
 
 .dropdown-item {
@@ -371,6 +403,7 @@ td img {
   white-space: nowrap;
   background: 0 0;
   border: 0;
+  font-size: min(max(10px, 1.25vw), 16px);
 }
 
 .dropdown-item:hover,
@@ -400,7 +433,7 @@ td img {
   box-sizing: border-box;
   border: 2px solid #cccccc;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: min(max(10px, 1.5vw), 16px);
   outline: none;
 }
 
