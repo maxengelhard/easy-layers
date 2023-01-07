@@ -40,8 +40,28 @@ const ExistingLayers = () => {
     fetchData()
   },[])
 
+  /* filters */
   const regions = regionsJson['regions'].map((region) => region['attributes']['aws:region']).sort((a,b) => a > b ? 1: -1)
-  
+  const [selectedRegion, setselectedRegion] = useState('us-east-1');
+  const [selectedlibrary, setselectedLibrary] = useState('All');
+  const [selectedRunTime, setselectedRuntime] = useState('All');
+  const [selectedArchitecture, setselectedArchitecture] = useState('All');
+
+  const handleRegionChange = (newValue) => {
+    setselectedRegion(newValue);
+  }
+
+  const handleLibraryChange = (newValue) => {
+    setselectedLibrary(newValue);
+  }
+
+  const handleRuntimeChange = (newValue) => {
+    setselectedRuntime(newValue);
+  }
+
+  const handleArchitectureChange = (newValue) => {
+    setselectedArchitecture(newValue);
+  }
 
   return (
       <div>
@@ -49,18 +69,39 @@ const ExistingLayers = () => {
         <table className='filter_table'>
                     <thead>
                       <tr className='filters'>
-                        <th className='region_filter'><DropdownMenu items={regions} defaultValue={'us-east-1'} title={'Region'}/></th>
+                        <th className='region_filter'>
+                          <DropdownMenu items={regions} defaultValue={selectedRegion} title={'Region'} 
+                          onValueChange={handleRegionChange}/>
+                          </th>
                         {layers ? 
-                        <th className='library_filter'><DropdownMenu items={['Select all'].concat(Object.entries(layers).map((layer) => layer[0]))} defaultValue={'All'} title={'Library'}/>{}</th>
+                        <th className='library_filter'>
+                          <DropdownMenu items={['Select all'].concat(Object.entries(layers).map((layer) => layer[0]))} defaultValue={selectedlibrary} title={'Library'}
+                          onValueChange={handleLibraryChange}/>
+                          </th>
                         : <th className='library_filter'>Loading...</th> } 
-                        <th className='runtime_filter'><DropdownMenu items={['Select all','python3.9','python3.8']} defaultValue={'All'} title={'Runtime'}/></th>
-                        <th className='architecture_filter'><DropdownMenu items={['Select all','x86_64','arm64']} defaultValue={'All'} title={'Architecture'}/></th>
+                        <th className='runtime_filter'>
+                          <DropdownMenu items={['Select all','python3.9','python3.8']} defaultValue={selectedRunTime} title={'Runtime'}
+                          onValueChange={handleRuntimeChange}/>
+                          </th>
+                        <th className='architecture_filter'><DropdownMenu items={['Select all','x86_64','arm64']} defaultValue={selectedArchitecture} title={'Architecture'}
+                        onValueChange={handleArchitectureChange}/>
+                        </th>
                       </tr>
                     </thead>
         </table>
             <div className='layers-container'>
             {layers ?
-            Object.entries(layers).map((layer,i) => {
+            Object.entries(layers)
+            .filter((layer) => (layer[0]===selectedlibrary || selectedlibrary==='All')) // filtering layers
+            .filter((layer) => (layer[1].some((version) => {
+              return version.data.LatestMatchingVersion.CompatibleRuntimes[0] ===selectedRunTime || selectedRunTime==='All' 
+            })))
+            .filter((layer) => (layer[1].filter((version) => {
+              //console.log(version.data.LatestMatchingVersion.LayerVersionArn ,version.data.LatestMatchingVersion.CompatibleArchitectures ? version.data.LatestMatchingVersion.CompatibleArchitectures : '')
+              return (version.data.LatestMatchingVersion.CompatibleArchitectures ? JSON.stringify(version.data.LatestMatchingVersion.CompatibleArchitectures).slice(1,-1).replaceAll('"','') : '') === selectedArchitecture || selectedArchitecture==='All' 
+            }
+            )).some(version => version))
+            .map((layer,i) => {
               const library = layer[0]
               const library_data = layer[1]
               return (
@@ -90,7 +131,10 @@ const ExistingLayers = () => {
                           }
 
                           return 0;
-                      }).map((version,j) => {
+                      })
+                      .filter((version) => (version.data.LatestMatchingVersion.CompatibleRuntimes[0] ===selectedRunTime || selectedRunTime==='All'))
+                      .filter((version) => (version.data.LatestMatchingVersion.CompatibleArchitectures ? JSON.stringify(version.data.LatestMatchingVersion.CompatibleArchitectures).slice(1,-1).replaceAll('"','') : '') === selectedArchitecture || selectedArchitecture==='All' )
+                      .map((version,j) => {
                         const version_data = version.data
                         return (
                           <tr key={j}>

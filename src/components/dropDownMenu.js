@@ -1,15 +1,11 @@
 import React, { useState , useEffect} from 'react';
 
-const DropdownMenu = ({items,defaultValue,title}) => {
+const DropdownMenu = ({items,defaultValue,title,onValueChange}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredItems, setFilteredItems] = useState(items); // assume items is an array of menu items
   const [filter,setFilter] = useState(defaultValue)
-  
-  if (defaultValue==='library') {
-    console.log(items)
-  }
-  
+    
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -50,7 +46,10 @@ const DropdownMenu = ({items,defaultValue,title}) => {
         {filteredItems.map(item => {
             const item_x = item === 'Select all' ? 'All' : item
             return (
-          <li className="dropdown-item" key={item_x} onClick={() => setFilter(item_x)}>
+          <li className="dropdown-item" key={item_x} onClick={() => {
+            onValueChange(item_x)
+            setFilter(item_x)
+            }}>
             {item}
           </li>
             )
