@@ -32,6 +32,7 @@ const InstallBar = () => {
       }, [shake]);
   
     return (
+    <div>
       <div className='layer-inputs'>
         <form className='left-column'>
             <div className="input-group">
@@ -47,11 +48,10 @@ const InstallBar = () => {
             <div className='command-description'>
             <div>Command that will run:</div>
             <div>pip install {text2.length===0 ? text1: `${text1}===${text2}`}</div>
-            <button className={`submit-button${shake ? ' shake' : ''}`} onClick={handleSubmit}>Submit</button>
         </div>
       </div>
-        
-
+      </div>
+      <button className={`submit-button${shake ? ' shake' : ''}`} onClick={handleSubmit}>Submit</button>
       </div>
     );  
 };

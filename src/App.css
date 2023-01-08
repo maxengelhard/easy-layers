@@ -175,8 +175,8 @@ img {
 .submit-button {
   height: 25%;
   width: 100%;
-  margin: min(max(10px, 1vw), 16px);
-  font-size: min(max(14px, 2vw), 20px); 
+  font-size: min(max(14px, 2vw), 20px);
+  padding: min(max(10px, 1vw), 16px); 
 }
 
 .shake {
