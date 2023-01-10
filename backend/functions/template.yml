@@ -42,6 +42,11 @@ Resources:
           AllowedMethods:
             - GET
             - POST
+            - HEAD
+            - DELETE
+            - OPTIONS
+            - PUT
+            - PATCH
           ViewerProtocolPolicy: redirect-to-https
           DefaultTTL: 3600
           ForwardedValues:
