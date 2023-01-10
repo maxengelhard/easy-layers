@@ -27,18 +27,29 @@ Resources:
       CertificateArn: arn:aws:acm:us-east-1:737802338670:certificate/74bbd679-a2eb-417b-b89c-a4dea0387397
       RestApiId:
         Ref: ApiGatewayBackend
+
+  CloudFrontOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: "Identity for static website bucket"
+
   MyCloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
         Aliases:
           - easylayers.dev
-          - www.easylayers.dev
         Enabled: true
+        DefaultRootObject: index.html
+        Origins:
+          - DomainName: easy-layers-front-end.s3.us-east-1.amazonaws.com
+            Id: MyStaticWebsiteBucketOrigin
+            S3OriginConfig:
+              OriginAccessIdentity: !GetAtt CloudFrontOriginAccessIdentity.S3CanonicalUserId
         DefaultCacheBehavior:
-          TargetOriginId: ApiGatewayBackend
+          TargetOriginId: MyStaticWebsiteBucketOrigin
           ViewerProtocolPolicy: redirect-to-https
-          DefaultTTL: 0
           AllowedMethods:
             - GET
             - POST
