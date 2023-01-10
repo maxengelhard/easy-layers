@@ -34,33 +34,29 @@ Resources:
       CloudFrontOriginAccessIdentityConfig:
         Comment: "Identity for static website bucket"
 
-  MyCloudFrontDistribution:
+  CloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
-        Aliases:
-          - easylayers.dev
-        Enabled: true
-        DefaultRootObject: index.html
-        Origins:
-          - DomainName: easy-layers-front-end.s3.us-east-1.amazonaws.com
-            Id: MyStaticWebsiteBucketOrigin
-            S3OriginConfig:
-              OriginAccessIdentity: !GetAtt CloudFrontOriginAccessIdentity.S3CanonicalUserId
         DefaultCacheBehavior:
-          TargetOriginId: MyStaticWebsiteBucketOrigin
-          ViewerProtocolPolicy: redirect-to-https
           AllowedMethods:
             - GET
             - POST
-          Compress: true
+          ViewerProtocolPolicy: redirect-to-https
+          DefaultTTL: 3600
           ForwardedValues:
-            QueryString: true
             Cookies:
-              Forward: all
-          MinTTL: 0
-          MaxTTL: 31536000
-          SmoothStreaming: false
+              Forward: none
+            QueryString: true
+          TargetOriginId: easy-layers-front-end.s3.us-east-1.amazonaws.com
+        Enabled: true
+        Origins:
+          - DomainName: 'easy-layers-front-end.s3.us-east-1.amazonaws.com'
+            Id: easy-layers-front-end.s3.us-east-1.amazonaws.com
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}
+  
+
 
   # define the Lambda function and its code
   CreateLayer39x86:
