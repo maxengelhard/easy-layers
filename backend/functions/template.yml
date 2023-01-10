@@ -25,8 +25,6 @@ Resources:
     Properties:
       DomainName: easylayers.dev
       CertificateArn: arn:aws:acm:us-east-1:737802338670:certificate/74bbd679-a2eb-417b-b89c-a4dea0387397
-      RestApiId:
-        Ref: ApiGatewayBackend
 
   CloudFrontOriginAccessIdentity:
     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
