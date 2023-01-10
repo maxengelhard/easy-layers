@@ -33,6 +33,23 @@ Resources:
       DistributionConfig:
         Aliases:
           - easylayers.dev
+          - www.easylayers.dev
+        Enabled: true
+        DefaultCacheBehavior:
+          TargetOriginId: ApiGatewayBackend
+          ViewerProtocolPolicy: redirect-to-https
+          DefaultTTL: 0
+          AllowedMethods:
+            - GET
+            - POST
+          Compress: true
+          ForwardedValues:
+            QueryString: true
+            Cookies:
+              Forward: all
+          MinTTL: 0
+          MaxTTL: 31536000
+          SmoothStreaming: false
 
   # define the Lambda function and its code
   CreateLayer39x86:
