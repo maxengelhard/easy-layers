@@ -23,41 +23,41 @@ Resources:
   ApiDomain:
     Type: AWS::ApiGateway::DomainName
     Properties:
-      DomainName: easylayers.dev
+      DomainName: api.easylayers.dev
       CertificateArn: arn:aws:acm:us-east-1:737802338670:certificate/74bbd679-a2eb-417b-b89c-a4dea0387397
 
-  CloudFrontOriginAccessIdentity:
-    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
-    Properties:
-      CloudFrontOriginAccessIdentityConfig:
-        Comment: "Identity for static website bucket"
+  # CloudFrontOriginAccessIdentity:
+  #   Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+  #   Properties:
+  #     CloudFrontOriginAccessIdentityConfig:
+  #       Comment: "Identity for static website bucket"
 
-  CloudFrontDistribution:
-    Type: AWS::CloudFront::Distribution
-    Properties:
-      DistributionConfig:
-        DefaultCacheBehavior:
-          AllowedMethods:
-            - GET
-            - POST
-            - HEAD
-            - DELETE
-            - OPTIONS
-            - PUT
-            - PATCH
-          ViewerProtocolPolicy: redirect-to-https
-          DefaultTTL: 3600
-          ForwardedValues:
-            Cookies:
-              Forward: none
-            QueryString: true
-          TargetOriginId: easy-layers-front-end.s3.us-east-1.amazonaws.com
-        Enabled: true
-        Origins:
-          - DomainName: 'easy-layers-front-end.s3.us-east-1.amazonaws.com'
-            Id: easy-layers-front-end.s3.us-east-1.amazonaws.com
-            S3OriginConfig:
-              OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}
+  # CloudFrontDistribution:
+  #   Type: AWS::CloudFront::Distribution
+  #   Properties:
+  #     DistributionConfig:
+  #       DefaultCacheBehavior:
+  #         AllowedMethods:
+  #           - GET
+  #           - POST
+  #           - HEAD
+  #           - DELETE
+  #           - OPTIONS
+  #           - PUT
+  #           - PATCH
+  #         ViewerProtocolPolicy: redirect-to-https
+  #         DefaultTTL: 3600
+  #         ForwardedValues:
+  #           Cookies:
+  #             Forward: none
+  #           QueryString: true
+  #         TargetOriginId: easy-layers-front-end.s3.us-east-1.amazonaws.com
+  #       Enabled: true
+  #       Origins:
+  #         - DomainName: 'easy-layers-front-end.s3.us-east-1.amazonaws.com'
+  #           Id: easy-layers-front-end.s3.us-east-1.amazonaws.com
+  #           S3OriginConfig:
+  #             OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}
   
 
 
