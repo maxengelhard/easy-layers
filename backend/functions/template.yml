@@ -13,6 +13,7 @@ Metadata:
         AllowOrigin: "'*'"
 
 Resources:
+
   # define api gateway
   ApiGatewayBackend:
     Type: AWS::Serverless::Api
@@ -25,6 +26,13 @@ Resources:
     Properties:
       DomainName: api.easylayers.dev
       CertificateArn: arn:aws:acm:us-east-1:737802338670:certificate/74bbd679-a2eb-417b-b89c-a4dea0387397
+  
+  APIMapping:
+    Type: AWS::ApiGateway::BasePathMapping
+    Properties: 
+      DomainName: api.easylayers.dev
+      RestApiId: !Ref ApiGatewayBackend
+      Stage: prd
 
   # CloudFrontOriginAccessIdentity:
   #   Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
