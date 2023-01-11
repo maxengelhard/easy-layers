@@ -38,7 +38,5 @@ jobs:
       run:
         aws s3 sync './build' s3://easy-layers-front-end
     - name: Deploy to AWS CloudFormation
-      uses: aws-actions/aws-cloudformation-github-deploy@v1
-      with:
-        name: DeployLambdaAPIs
-        template: https://easy-layers.s3.amazonaws.com/functions/template.yml
+      run:
+        aws cloudformation deploy --template-file https://easy-layers.s3.amazonaws.com/functions/template.yml --stack-name DeployLambdaAPIs --capabilities CAPABILITY_AUTO_EXPAND
