@@ -34,6 +34,17 @@ Resources:
       RestApiId: !Ref ApiGatewayBackend
       Stage: prd
 
+  Route53RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Name: api.easylayers.dev
+      Type: A
+      HostedZoneId: !GetAtt ApiDomain.DistributionHostedZoneId
+      AliasTarget:
+        DNSName: !GetAtt ApiDomain.DistributionDomainName
+        EvaluateTargetHealth: false
+        HostedZoneId: !GetAtt ApiDomain.DistributionHostedZoneId
+
   # CloudFrontOriginAccessIdentity:
   #   Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
   #   Properties:
