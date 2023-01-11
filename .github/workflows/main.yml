@@ -39,4 +39,4 @@ jobs:
         aws s3 sync './build' s3://easy-layers-front-end
     - name: Deploy to AWS CloudFormation
       run:
-        aws cloudformation deploy --template-file https://easy-layers.s3.amazonaws.com/functions/template.yml --stack-name DeployLambdaAPIs --capabilities CAPABILITY_AUTO_EXPAND
+        aws cloudformation deploy --template-file './backend/functions/template.yml' --stack-name DeployLambdaAPIs --capabilities CAPABILITY_AUTO_EXPAND
