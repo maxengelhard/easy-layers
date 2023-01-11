@@ -33,6 +33,7 @@ Resources:
       DomainName: api.easylayers.dev
       RestApiId: !Ref ApiGatewayBackend
       Stage: prd
+      BasePath: !Ref "AWS::Region"
 
   Route53RecordSet:
     Type: AWS::Route53::RecordSet
