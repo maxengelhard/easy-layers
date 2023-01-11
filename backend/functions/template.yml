@@ -39,7 +39,7 @@ Resources:
     Properties:
       Name: api.easylayers.dev
       Type: A
-      HostedZoneId: !GetAtt ApiDomain.DistributionHostedZoneId
+      HostedZoneId: Z07945432O7XSGL2FJGD6
       AliasTarget:
         DNSName: !GetAtt ApiDomain.DistributionDomainName
         EvaluateTargetHealth: false
