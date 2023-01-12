@@ -76,7 +76,8 @@ Resources:
           - Effect: Allow
             Action: 
               - logs:CreateLogGroup
-            Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
           - Effect: Allow
             Action:
               - logs:CreateLogStream
@@ -111,26 +112,12 @@ Resources:
               - "*"
 
   TriggerNeededLayers38arm:
-  Type: AWS::CloudFormation::CustomResource
-  DependsOn: CreateNeededLayer38arm
-  Properties:
-    ServiceToken: !GetAtt CreateNeededLayer38arm.Arn
-  
-  Outputs:
-    jsonschemaarn:
-      Description: Layer Arn of jsonschema
-      Value: !GetAtt 
-        - CreateNeededLayers
-        - jsonschema
-    requestsarn:
-      Description: Layer Arn of requests
-      Value: !GetAtt 
-        - CreateNeededLayers
-        - jsonschema 
+    Type: AWS::CloudFormation::CustomResource
+    DependsOn: CreateNeededLayer38arm
+    Properties:
+      ServiceToken: !GetAtt CreateNeededLayer38arm.Arn
 
   
-
-
   # define the Lambda function and its code
   CreateLayer39x86:
     Type: AWS::Serverless::Function
@@ -154,14 +141,15 @@ Resources:
             Path: /create_layer39x86
             Method: post
       Layers:
-        - !Sub "arn:aws:lambda:us-east-1:737802338670:layer:jsonschema:1"
+        - !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:jsonschema:1"
         - !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:requests-2-28-1:1"
       Policies:
         Statement:
           - Effect: Allow
             Action: 
               - logs:CreateLogGroup
-            Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
           - Effect: Allow
             Action:
               - logs:CreateLogStream
@@ -224,7 +212,8 @@ Resources:
           - Effect: Allow
             Action: 
               - logs:CreateLogGroup
-            Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
           - Effect: Allow
             Action:
               - logs:CreateLogStream
@@ -288,7 +277,8 @@ Resources:
           - Effect: Allow
             Action: 
               - logs:CreateLogGroup
-            Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
           - Effect: Allow
             Action:
               - logs:CreateLogStream
@@ -352,7 +342,8 @@ Resources:
           - Effect: Allow
             Action: 
               - logs:CreateLogGroup
-            Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
           - Effect: Allow
             Action:
               - logs:CreateLogStream
@@ -427,6 +418,17 @@ Resources:
               Action:
                 - logs:CreateLogStream
                 - logs:PutLogEvents
-              Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/easy_layers_get_layers:*"
+              Resource: 
+                - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/easy_layers_get_layers:*"
   
-    
+# Outputs:
+#   jsonschemaarn:
+#     Description: Layer Arn of jsonschema
+#     Value: !GetAtt 
+#       - CreateNeededLayers
+#       - jsonschema
+#   requestsarn:
+#     Description: Layer Arn of requests
+#     Value: !GetAtt 
+#       - CreateNeededLayers
+#       - jsonschema 
