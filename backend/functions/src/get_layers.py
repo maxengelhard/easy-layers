@@ -31,20 +31,23 @@ def lambda_handler(event, context):
         
         trim_contents = []
         contents = response['Contents']
+        
         for content in contents:
             obj = {'Key':content['Key'],'LastModified':content['LastModified']}
             trim_contents.append(obj)
             for layer in layers:
-                if layer['LayerName']==content['Key'].replace('.zip','').replace('.','-') and layer['LayerName'].split('x')[1] !='x':
+                if layer['LayerName']==content['Key'].replace('.zip','').replace('.','-'):
                     layer['Key']=content['Key']
                     layer['LastModified']=str(content['LastModified'])
-        
+                    
+        usable_layers = [layer for layer in layers if not (len(layer['LayerName'].split('-')) > 1 and layer['LayerName'].split('-')[1] =='x')]
     
     except Exception as e:
         raise e
     
+    print(usable_layers)
     
-    return layers
+    return usable_layers
     
 # def read_only(event, Bucket, Lambda):
 #     # Prepare the dict
@@ -70,3 +73,4 @@ def lambda_handler(event, context):
 #     # Return libraries versions
 #     return libraries_json
     
+
