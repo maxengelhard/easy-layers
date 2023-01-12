@@ -115,17 +115,18 @@ Resources:
   DependsOn: CreateNeededLayer38arm
   Properties:
     ServiceToken: !GetAtt CreateNeededLayer38arm.Arn
-Outputs:
-  jsonschemaarn:
-    Description: Layer Arn of jsonschema
-    Value: !GetAtt 
-      - CreateNeededLayers
-      - jsonschema
-  requestsarn:
-    Description: Layer Arn of requests
-    Value: !GetAtt 
-      - CreateNeededLayers
-      - jsonschema 
+  
+  Outputs:
+    jsonschemaarn:
+      Description: Layer Arn of jsonschema
+      Value: !GetAtt 
+        - CreateNeededLayers
+        - jsonschema
+    requestsarn:
+      Description: Layer Arn of requests
+      Value: !GetAtt 
+        - CreateNeededLayers
+        - jsonschema 
 
   
 
