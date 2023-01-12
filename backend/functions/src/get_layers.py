@@ -35,7 +35,7 @@ def lambda_handler(event, context):
             obj = {'Key':content['Key'],'LastModified':content['LastModified']}
             trim_contents.append(obj)
             for layer in layers:
-                if layer['LayerName']==content['Key'].replace('.zip','').replace('.','-'):
+                if layer['LayerName']==content['Key'].replace('.zip','').replace('.','-') and layer['LayerName'].split('x')[1] !='x':
                     layer['Key']=content['Key']
                     layer['LastModified']=str(content['LastModified'])
         
