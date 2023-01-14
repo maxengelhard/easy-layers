@@ -50,7 +50,7 @@ Resources:
   NeededLayerLambdaPolicy:
         Type: "AWS::IAM::ManagedPolicy"
         Properties:
-            ManagedPolicyName: needed-layers-lambda-policy
+            ManagedPolicyName: !Sub "needed-layers-lambda-policy-${AWS::Region}"
             Path: "/service-role/"
             PolicyDocument: !Sub |
                 {
@@ -126,7 +126,7 @@ Resources:
     Type: "AWS::IAM::Role"
     Properties:
         Path: "/service-role/"
-        RoleName: needed-layers-lambda-role
+        RoleName: !Sub "needed-layers-lambda-role-${AWS::Region}"
         AssumeRolePolicyDocument: !Sub |
             {
                 "Version":"2012-10-17",
