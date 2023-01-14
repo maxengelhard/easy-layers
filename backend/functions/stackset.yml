@@ -21,11 +21,11 @@ Resources:
       StageName: prd
       Name: get_layers_api
 
-  ApiDomain:
-    Type: AWS::ApiGateway::DomainName
-    Properties:
-      DomainName: api.easylayers.dev
-      CertificateArn: arn:aws:acm:us-east-1:737802338670:certificate/74bbd679-a2eb-417b-b89c-a4dea0387397
+  # ApiDomain:
+  #   Type: AWS::ApiGateway::DomainName
+  #   Properties:
+  #     DomainName: api.easylayers.dev
+  #     CertificateArn: arn:aws:acm:us-east-1:737802338670:certificate/74bbd679-a2eb-417b-b89c-a4dea0387397
   
   APIMapping:
     Type: AWS::ApiGateway::BasePathMapping
