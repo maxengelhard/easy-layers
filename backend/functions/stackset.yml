@@ -734,7 +734,7 @@ Resources:
     DependsOn: TriggerNeededLayers39x86
     Properties:
       CodeUri:
-        Bucket: !Sub "easy-layers-${AWS:Region}"
+        Bucket: !Sub "easy-layers-${AWS::Region}"
         Key: functions/src/deployment_easy_layers.zip
       FunctionName: create_layer_easy_layers_39x86
       Handler: create_layer.lambda_handler
@@ -799,7 +799,7 @@ Resources:
     DependsOn: TriggerNeededLayers38x86
     Properties:
       CodeUri:
-        Bucket: !Sub "easy-layers-${AWS:Region}"
+        Bucket: !Sub "easy-layers-${AWS::Region}"
         Key: functions/src/deployment_easy_layers.zip
       FunctionName: create_layer_easy_layers_38x86
       Handler: create_layer.lambda_handler
@@ -865,7 +865,7 @@ Resources:
     DependsOn: TriggerNeededLayers39arm
     Properties:
       CodeUri:
-        Bucket: !Sub "easy-layers-${AWS:Region}"
+        Bucket: !Sub "easy-layers-${AWS::Region}"
         Key: functions/src/deployment_easy_layers.zip
       FunctionName: create_layer_easy_layers_39arm
       Handler: create_layer.lambda_handler
@@ -930,7 +930,7 @@ Resources:
     DependsOn: TriggerNeededLayers38arm
     Properties:
       CodeUri:
-        Bucket: !Sub "easy-layers-${AWS:Region}"
+        Bucket: !Sub "easy-layers-${AWS::Region}"
         Key: functions/src/deployment_easy_layers.zip
       FunctionName: create_layer_easy_layers_38arm
       Handler: create_layer.lambda_handler
@@ -994,7 +994,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri:
-        Bucket: !Sub "easy-layers-${AWS:Region}"
+        Bucket: !Sub "easy-layers-${AWS::Region}"
         Key: functions/src/deployment_easy_layers.zip
       Handler: get_layers.lambda_handler
       Runtime: python3.9
