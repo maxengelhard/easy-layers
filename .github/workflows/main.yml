@@ -37,6 +37,20 @@ jobs:
     - name: Copy files to the frontend-bucket
       run:
         aws s3 sync './build' s3://easy-layers-front-end
+    - name: Configure AWS Credentials US-East-2
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: us-east-2
+        role-to-assume: arn:aws:iam::737802338670:role/CreateOpenIDConnect-Role-1TE6U38TD5Z4X
+        role-session-name: MySessionName
+    - name: zip backend files
+      run: zip -r -j ./backend/functions/src/deployment_easy_layers.zip ./backend/functions/src/*
+    - name: Copy files to the s3 backend bucket
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers/functions
+    # - name: Copy files to the frontend-bucket
+    #   run:
+    #     aws s3 sync './build' s3://easy-layers-front-end
     # - name: Deploy to AWS CloudFormation
     #   run:
     #     aws cloudformation deploy --template-file './backend/functions/template.yml' --stack-name DeployLayerFunctionsAndAPIS --no-fail-on-empty-changeset --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
