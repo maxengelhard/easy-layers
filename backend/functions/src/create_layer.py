@@ -17,7 +17,6 @@ except ImportError:
     from pip._vendor.packaging.version import parse
     
 S3 = boto3.resource('s3')
-Bucket = S3.Bucket('easy-layers')
 Lambda = boto3.client('lambda')
 
 @cors_headers
@@ -25,6 +24,8 @@ Lambda = boto3.client('lambda')
 @json_schema_validator(request_schema)
 def lambda_handler(event, context):
     # Test Access permision to S3
+    region = event["body"]["region"]
+    Bucket = S3.Bucket(f'easy-layers-{region}')
     try:
         Bucket.objects.limit(count=1)
     except Exception:
@@ -46,6 +47,7 @@ def create_new(event, Bucket, Lambda):
     body =  event["body"]
     library = body["library"]
     library_version = body.get("version")
+    region = body["region"]
 
     machine = 'arm64' if platform.machine() == 'aarch64' else platform.machine()
     run_time = 'python' + '.'.join(sys.version.split(' ')[0].split('.')[0:2])
@@ -105,7 +107,7 @@ def create_new(event, Bucket, Lambda):
     try:
         new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                      Content= {
-                                                        'S3Bucket': 'easy-layers',
+                                                        'S3Bucket': 'easy-layers-'+ region,
                                                         'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                      CompatibleRuntimes=[run_time],
                                                      CompatibleArchitectures=[machine])
