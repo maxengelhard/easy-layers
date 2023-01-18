@@ -289,7 +289,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        ZipFile: |
+        ZipFile: !Sub |
           import json
           import sys 
           import os
@@ -1033,3 +1033,12 @@ Resources:
                 - logs:PutLogEvents
               Resource: 
                 - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/easy_layers_get_layers:*"
+
+Outputs:
+  DNSName:
+    Description: DNSName
+    Value: !GetAtt ApiDomain.DistributionDomainName
+  HostedZoneId:
+    Description: HostedZoneId
+    Value: ! GetAtt ApiDomain.DistributionHostedZoneId
+  

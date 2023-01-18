@@ -21,11 +21,11 @@ Resources:
       StageName: prd
       Name: get_layers_api
 
-  # ApiDomain:
-  #   Type: AWS::ApiGateway::DomainName
-  #   Properties:
-  #     DomainName: api.easylayers.dev
-  #     CertificateArn: arn:aws:acm:us-east-1:737802338670:certificate/74bbd679-a2eb-417b-b89c-a4dea0387397
+  ApiDomain:
+    Type: AWS::ApiGateway::DomainName
+    Properties:
+      DomainName: api.easylayers.dev
+      CertificateArn: arn:aws:acm:us-east-1:737802338670:certificate/74bbd679-a2eb-417b-b89c-a4dea0387397
   
   APIMapping:
     Type: AWS::ApiGateway::BasePathMapping
@@ -38,13 +38,13 @@ Resources:
   # Route53RecordSet:
   #   Type: AWS::Route53::RecordSet
   #   Properties:
-  #     Name: api.easylayers.dev
+  #     Name: !Sub "api.easylayers.dev/${AWS::Region}"
   #     Type: A
   #     HostedZoneId: Z07945432O7XSGL2FJGD6
   #     AliasTarget:
-  #       DNSName: !GetAtt ApiDomain.DistributionDomainName
+  #       DNSName: dlat0f9kggkbw.cloudfront.net
   #       EvaluateTargetHealth: false
-  #       HostedZoneId: !GetAtt ApiDomain.DistributionHostedZoneId
+  #       HostedZoneId: Z07945432O7XSGL2FJGD6
 
   # Needed layer Policy
   NeededLayerLambdaPolicy:
@@ -150,7 +150,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        ZipFile: |
+        ZipFile: !Sub |
           import json
           import sys 
           import os
@@ -168,7 +168,7 @@ Resources:
               from pip._vendor.packaging.version import parse
               
           S3 = boto3.resource('s3')
-          Bucket = S3.Bucket('easy-layers')
+          Bucket = S3.Bucket('easy-layers-${AWS::Region}')
           Lambda = boto3.client('lambda')
 
           def lambda_handler(event, context):
@@ -253,7 +253,7 @@ Resources:
               try:
                   new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                               Content= {
-                                                                  'S3Bucket': 'easy-layers',
+                                                                  'S3Bucket': 'easy-layers-${AWS::Region}',
                                                                   'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                               CompatibleRuntimes=[run_time],
                                                               CompatibleArchitectures=[machine])
@@ -289,7 +289,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        ZipFile: |
+        ZipFile: !Sub |
           import json
           import sys 
           import os
@@ -307,7 +307,7 @@ Resources:
               from pip._vendor.packaging.version import parse
               
           S3 = boto3.resource('s3')
-          Bucket = S3.Bucket('easy-layers')
+          Bucket = S3.Bucket('easy-layers-${AWS::Region}')
           Lambda = boto3.client('lambda')
 
           def lambda_handler(event, context):
@@ -392,7 +392,7 @@ Resources:
               try:
                   new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                               Content= {
-                                                                  'S3Bucket': 'easy-layers',
+                                                                  'S3Bucket': 'easy-layers-${AWS::Region}',
                                                                   'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                               CompatibleRuntimes=[run_time],
                                                               CompatibleArchitectures=[machine])
@@ -428,7 +428,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        ZipFile: |
+        ZipFile: !Sub |
           import json
           import sys 
           import os
@@ -446,7 +446,7 @@ Resources:
               from pip._vendor.packaging.version import parse
               
           S3 = boto3.resource('s3')
-          Bucket = S3.Bucket('easy-layers')
+          Bucket = S3.Bucket('easy-layers-${AWS::Region}')
           Lambda = boto3.client('lambda')
 
           def lambda_handler(event, context):
@@ -531,7 +531,7 @@ Resources:
               try:
                   new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                               Content= {
-                                                                  'S3Bucket': 'easy-layers',
+                                                                  'S3Bucket': 'easy-layers-${AWS::Region}',
                                                                   'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                               CompatibleRuntimes=[run_time],
                                                               CompatibleArchitectures=[machine])
@@ -567,7 +567,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        ZipFile: |
+        ZipFile: !Sub |
           import json
           import sys 
           import os
@@ -585,7 +585,7 @@ Resources:
               from pip._vendor.packaging.version import parse
               
           S3 = boto3.resource('s3')
-          Bucket = S3.Bucket('easy-layers')
+          Bucket = S3.Bucket('easy-layers-${AWS::Region}')
           Lambda = boto3.client('lambda')
 
           def lambda_handler(event, context):
@@ -670,7 +670,7 @@ Resources:
               try:
                   new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                               Content= {
-                                                                  'S3Bucket': 'easy-layers',
+                                                                  'S3Bucket': 'easy-layers-${AWS::Region}',
                                                                   'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                               CompatibleRuntimes=[run_time],
                                                               CompatibleArchitectures=[machine])
