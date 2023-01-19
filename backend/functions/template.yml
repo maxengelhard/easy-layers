@@ -742,7 +742,7 @@ Resources:
       Runtime: python3.9
       Architectures: 
         - x86_64
-      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.9
+      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.9 x86
       Timeout: 300
       Events:
         ApiEvent:
@@ -807,7 +807,7 @@ Resources:
       Runtime: python3.8
       Architectures: 
         - x86_64
-      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.8
+      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.8 x86
       Timeout: 300
       Events:
         ApiEvent:
@@ -873,7 +873,7 @@ Resources:
       Runtime: python3.9
       Architectures: 
         - arm64
-      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.9
+      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.9 arm
       Timeout: 300
       Events:
         ApiEvent:
@@ -938,7 +938,7 @@ Resources:
       Runtime: python3.8
       Architectures: 
         - arm64
-      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.8
+      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.8 arm
       Timeout: 300
       Events:
         ApiEvent:
