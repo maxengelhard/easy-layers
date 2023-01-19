@@ -12,6 +12,7 @@ const Home = () => {
     const [selectedRegion, setselectedRegion] = useState('us-east-1');
     const [selectedRunTime, setselectedRuntime] = useState('python3.9');
     const [selectedArchitecture, setselectedArchitecture] = useState('x86_64');
+    const [createdLayer,setCreatedLayer] = useState(false)
 
     const handleRegionChange = (newValue) => {
       setselectedRegion(newValue);
@@ -24,6 +25,15 @@ const Home = () => {
     const handleArchitectureChange = (newValue) => {
       setselectedArchitecture(newValue);
     }
+
+    const createLayer = async () => {
+      const endpoint = `create_layer${selectedRunTime==='python3.9' ? '39' : '38'}${selectedArchitecture==='x86_64' ? 'x86': 'arm'}`
+      const api_gateway = `https://api-${selectedRegion}.easylayers.dev/${endpoint}`
+      await fetch(`${api_gateway}`)
+      .then(result => result.json())
+      .then(result => setCreatedLayer(result))
+    }
+
     return (
       <div className='create-layer'>
         <h1 className='title'>Welcome to Easy Layers</h1>

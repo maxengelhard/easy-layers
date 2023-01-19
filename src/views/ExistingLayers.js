@@ -9,12 +9,19 @@ import regionsJson from '../components/regions'
 
 const ExistingLayers = () => {
   
-  const api_gateway = 'https://api-us-east-1.easylayers.dev/get_layers'
-
   const [layers,setLayers] = useState(false)
+  /* filters */
+  const regions = regionsJson['regions'].map((region) => region['attributes']['aws:region']).sort((a,b) => a > b ? 1: -1)
+  const [selectedRegion, setselectedRegion] = useState('us-east-1');
+  const [selectedlibrary, setselectedLibrary] = useState('All');
+  const [selectedRunTime, setselectedRuntime] = useState('All');
+  const [selectedArchitecture, setselectedArchitecture] = useState('All');
+
+  
   
   useEffect(() => {
     const fetchData = async () => {
+    const api_gateway = `https://api-${selectedRegion}.easylayers.dev/get_layers`
      await fetch(`${api_gateway}`)
      .then(result => result.json())
      .then(result => {
@@ -38,14 +45,9 @@ const ExistingLayers = () => {
     }
 
     fetchData()
-  },[])
+  },[selectedRegion])
 
-  /* filters */
-  const regions = regionsJson['regions'].map((region) => region['attributes']['aws:region']).sort((a,b) => a > b ? 1: -1)
-  const [selectedRegion, setselectedRegion] = useState('us-east-1');
-  const [selectedlibrary, setselectedLibrary] = useState('All');
-  const [selectedRunTime, setselectedRuntime] = useState('All');
-  const [selectedArchitecture, setselectedArchitecture] = useState('All');
+
 
   const handleRegionChange = (newValue) => {
     setselectedRegion(newValue);
