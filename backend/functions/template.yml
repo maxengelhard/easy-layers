@@ -24,21 +24,22 @@ Resources:
   ApiDomain:
     Type: AWS::ApiGateway::DomainName
     Properties:
-      DomainName: api.easylayers.dev
+      DomainName: !Sub "api-${AWS::Region}.easylayers.dev"
       CertificateArn: arn:aws:acm:us-east-1:737802338670:certificate/74bbd679-a2eb-417b-b89c-a4dea0387397
   
   APIMapping:
     Type: AWS::ApiGateway::BasePathMapping
+    DependsOn: ApiDomain
     Properties: 
-      DomainName: api.easylayers.dev
+      DomainName: !Sub "api-${AWS::Region}.easylayers.dev"
       RestApiId: !Ref ApiGatewayBackend
       Stage: prd
-      BasePath: !Ref "AWS::Region"
+      # BasePath: !Ref "AWS::Region"
 
   Route53RecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
-      Name: api.easylayers.dev
+      Name: !Sub "api-${AWS::Region}.easylayers.dev"
       Type: A
       HostedZoneId: Z07945432O7XSGL2FJGD6
       AliasTarget:
@@ -1023,8 +1024,10 @@ Resources:
               Action:
                 - s3:ListBucket
                 - logs:CreateLogGroup
+                - s3:GetObjectAcl
+                - s3:GetObject
               Resource:
-                - arn:aws:s3:::easy-layers
+                - !Sub "arn:aws:s3:::easy-layers-${AWS::Region}"
                 - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
             - Sid: VisualEditor2
               Effect: Allow

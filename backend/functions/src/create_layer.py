@@ -24,7 +24,7 @@ Lambda = boto3.client('lambda')
 @json_schema_validator(request_schema)
 def lambda_handler(event, context):
     # Test Access permision to S3
-    region = event["body"]["region"]
+    region = '-'.join(event.get('requestContext').get('domainPrefix').split('-')[1:])
     Bucket = S3.Bucket(f'easy-layers-{region}')
     try:
         Bucket.objects.limit(count=1)

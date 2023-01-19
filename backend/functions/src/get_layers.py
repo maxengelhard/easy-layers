@@ -24,8 +24,11 @@ def lambda_handler(event, context):
         print(e)
         return "This function has no access to Lambda resources, please validate"
     try:
+        
+        region = '-'.join(event.get('requestContext').get('domainPrefix').split('-')[1:])
+        
         response = S3.list_objects_v2(
-            Bucket='easy-layers',
+            Bucket=f'easy-layers-{region}',
             # ContinuationToken='string',
         )
         
