@@ -27,22 +27,20 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-region: us-east-1
-        role-to-assume: arn:aws:iam::737802338670:role/CreateOpenIDConnect-Role-1TE6U38TD5Z4X
+        role-to-assume: arn:aws:iam::360548816597:role/OpenIdRole
         role-session-name: MySessionName
     - name: zip backend files
       run: zip -r -j ./backend/functions/src/deployment_easy_layers.zip ./backend/functions/src/*
-    - name: Copy files to the s3 backend bucket
-      run:
-        aws s3 sync './backend/functions' s3://easy-layers-us-east-1/functions
     - name: Copy files to the frontend-bucket
       run:
-        aws s3 sync './build' s3://easy-layers-front-end
+        aws s3 sync './build' s3://easy-layers-dev-front-end
+    - name: Copy files to the s3 backend bucket us-east-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-1/functions
+
     - name: Copy files to the s3 backend bucket us-east-2
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-us-east-2/functions
-    # - name: Copy files to the frontend-bucket
-    #   run:
-    #     aws s3 sync './build' s3://easy-layers-front-end
+        aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-2/functions
     # - name: Deploy to AWS CloudFormation
     #   run:
     #     aws cloudformation deploy --template-file './backend/functions/template.yml' --stack-name DeployLayerFunctionsAndAPIS --no-fail-on-empty-changeset --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
