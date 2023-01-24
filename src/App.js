@@ -1,9 +1,11 @@
 import React from 'react'
-import Header from './components/Header';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 /*css */
 import './App.css';
+
+/* components */
+import Header from './components/Header';
 
 /* views */
 import Home from './views/Home';
