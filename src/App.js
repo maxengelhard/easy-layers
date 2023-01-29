@@ -12,7 +12,7 @@ import Header from './components/Header';
 import Home from './views/Home';
 import About from './views/About';
 import ExistingLayers from './views/ExistingLayers';
-import Footer from './components/footer';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -21,6 +21,7 @@ function App() {
        <Router>
       <div className="sidebar">
         <Header />
+        <Footer />
       </div>
       <div className="main-content">
         <Routes>
@@ -29,7 +30,7 @@ function App() {
           <Route path="/about" element={<About />} />
         </Routes>
       </div>
-      <Footer />
+      
       </Router>
       
     </div>
