@@ -5,6 +5,7 @@ import React , {useState} from 'react';
 import InstallBar from '../components/InstallBar';
 import DropdownMenu from '../components/dropDownMenu';
 import regionsJson from '../components/regions'
+// import VerticalAd from '../components/verticalAd';
 
 const Home = () => {
     /* filters */
@@ -61,6 +62,7 @@ const Home = () => {
         </table>
         <InstallBar />
       </div>
+      {/* <VerticalAd /> */}
       </div>
     );
   }
