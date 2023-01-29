@@ -6,7 +6,7 @@ import './App.css';
 
 /* components */
 import Header from './components/Header';
-import Footer from './components/Footer';
+import Footer from './components/footer';
 // import VerticalAd from './components/verticalAd';
 
 /* views */
