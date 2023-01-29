@@ -6,13 +6,14 @@ import './App.css';
 
 /* components */
 import Header from './components/Header';
+import Footer from './components/Footer';
 // import VerticalAd from './components/verticalAd';
 
 /* views */
 import Home from './views/Home';
 import About from './views/About';
 import ExistingLayers from './views/ExistingLayers';
-import Footer from './components/Footer';
+
 
 function App() {
   return (
