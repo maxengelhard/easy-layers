@@ -31,12 +31,12 @@ jobs:
         role-session-name: MySessionName
     - name: zip backend files
       run: zip -r -j ./backend/functions/src/deployment_easy_layers.zip ./backend/functions/src/*
-    - name: Copy files to the frontend-bucket
-      run:
-        aws s3 sync './build' s3://easy-layers.dev
+    # - name: Copy files to the frontend-bucket
+    #   run:
+    #     aws s3 sync './build' s3://easylayers.dev
     - name: Copy files to www frontend
       run:
-        aws s3 sync './build' s3://www.easy-layers.dev 
+        aws s3 sync './build' s3://www.easylayers.dev 
     - name: Copy files to the s3 backend bucket us-east-1
       run:
         aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-1/functions
