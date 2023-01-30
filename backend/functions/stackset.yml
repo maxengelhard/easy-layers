@@ -25,7 +25,7 @@ Resources:
     Type: AWS::ApiGateway::DomainName
     Properties:
       DomainName: !Sub "api-${AWS::Region}.easylayers.dev"
-      CertificateArn: arn:aws:acm:us-east-1:737802338670:certificate/74bbd679-a2eb-417b-b89c-a4dea0387397
+      CertificateArn: arn:aws:acm:us-east-1:360548816597:certificate/b416ee4d-c0bd-48d8-b9b5-87f67d0461d7
   
   APIMapping:
     Type: AWS::ApiGateway::BasePathMapping
@@ -41,7 +41,7 @@ Resources:
     Properties:
       Name: !Sub "api-${AWS::Region}.easylayers.dev"
       Type: A
-      HostedZoneId: Z07945432O7XSGL2FJGD6
+      HostedZoneId: Z01613042LX65UZV97A4C
       AliasTarget:
         DNSName: !GetAtt ApiDomain.DistributionDomainName
         EvaluateTargetHealth: false
@@ -169,7 +169,7 @@ Resources:
               from pip._vendor.packaging.version import parse
               
           S3 = boto3.resource('s3')
-          Bucket = S3.Bucket('easy-layers-${AWS::Region}')
+          Bucket = S3.Bucket('easy-layers-dev-${AWS::Region}')
           Lambda = boto3.client('lambda')
 
           def lambda_handler(event, context):
@@ -254,7 +254,7 @@ Resources:
               try:
                   new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                               Content= {
-                                                                  'S3Bucket': 'easy-layers-${AWS::Region}',
+                                                                  'S3Bucket': 'easy-layers-dev-${AWS::Region}',
                                                                   'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                               CompatibleRuntimes=[run_time],
                                                               CompatibleArchitectures=[machine])
@@ -308,7 +308,7 @@ Resources:
               from pip._vendor.packaging.version import parse
               
           S3 = boto3.resource('s3')
-          Bucket = S3.Bucket('easy-layers-${AWS::Region}')
+          Bucket = S3.Bucket('easy-layers-dev-${AWS::Region}')
           Lambda = boto3.client('lambda')
 
           def lambda_handler(event, context):
@@ -393,7 +393,7 @@ Resources:
               try:
                   new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                               Content= {
-                                                                  'S3Bucket': 'easy-layers-${AWS::Region}',
+                                                                  'S3Bucket': 'easy-layers-dev-${AWS::Region}',
                                                                   'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                               CompatibleRuntimes=[run_time],
                                                               CompatibleArchitectures=[machine])
@@ -447,7 +447,7 @@ Resources:
               from pip._vendor.packaging.version import parse
               
           S3 = boto3.resource('s3')
-          Bucket = S3.Bucket('easy-layers-${AWS::Region}')
+          Bucket = S3.Bucket('easy-layers-dev-${AWS::Region}')
           Lambda = boto3.client('lambda')
 
           def lambda_handler(event, context):
@@ -532,7 +532,7 @@ Resources:
               try:
                   new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                               Content= {
-                                                                  'S3Bucket': 'easy-layers-${AWS::Region}',
+                                                                  'S3Bucket': 'easy-layers-dev-${AWS::Region}',
                                                                   'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                               CompatibleRuntimes=[run_time],
                                                               CompatibleArchitectures=[machine])
@@ -586,7 +586,7 @@ Resources:
               from pip._vendor.packaging.version import parse
               
           S3 = boto3.resource('s3')
-          Bucket = S3.Bucket('easy-layers-${AWS::Region}')
+          Bucket = S3.Bucket('easy-layers-dev-${AWS::Region}')
           Lambda = boto3.client('lambda')
 
           def lambda_handler(event, context):
@@ -671,7 +671,7 @@ Resources:
               try:
                   new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                               Content= {
-                                                                  'S3Bucket': 'easy-layers-${AWS::Region}',
+                                                                  'S3Bucket': 'easy-layers-dev-${AWS::Region}',
                                                                   'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                               CompatibleRuntimes=[run_time],
                                                               CompatibleArchitectures=[machine])
@@ -735,7 +735,7 @@ Resources:
     DependsOn: TriggerNeededLayers39x86
     Properties:
       CodeUri:
-        Bucket: !Sub "easy-layers-${AWS::Region}"
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
         Key: functions/src/deployment_easy_layers.zip
       FunctionName: create_layer_easy_layers_39x86
       Handler: create_layer.lambda_handler
@@ -800,7 +800,7 @@ Resources:
     DependsOn: TriggerNeededLayers38x86
     Properties:
       CodeUri:
-        Bucket: !Sub "easy-layers-${AWS::Region}"
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
         Key: functions/src/deployment_easy_layers.zip
       FunctionName: create_layer_easy_layers_38x86
       Handler: create_layer.lambda_handler
@@ -866,7 +866,7 @@ Resources:
     DependsOn: TriggerNeededLayers39arm
     Properties:
       CodeUri:
-        Bucket: !Sub "easy-layers-${AWS::Region}"
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
         Key: functions/src/deployment_easy_layers.zip
       FunctionName: create_layer_easy_layers_39arm
       Handler: create_layer.lambda_handler
@@ -931,7 +931,7 @@ Resources:
     DependsOn: TriggerNeededLayers38arm
     Properties:
       CodeUri:
-        Bucket: !Sub "easy-layers-${AWS::Region}"
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
         Key: functions/src/deployment_easy_layers.zip
       FunctionName: create_layer_easy_layers_38arm
       Handler: create_layer.lambda_handler
@@ -995,7 +995,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri:
-        Bucket: !Sub "easy-layers-${AWS::Region}"
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
         Key: functions/src/deployment_easy_layers.zip
       Handler: get_layers.lambda_handler
       Runtime: python3.9
@@ -1027,7 +1027,7 @@ Resources:
                 - s3:GetObjectAcl
                 - s3:GetObject
               Resource:
-                - !Sub "arn:aws:s3:::easy-layers-${AWS::Region}"
+                - !Sub "arn:aws:s3:::easy-layers-dev-${AWS::Region}"
                 - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
             - Sid: VisualEditor2
               Effect: Allow

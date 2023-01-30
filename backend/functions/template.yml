@@ -25,7 +25,7 @@ Resources:
     Type: AWS::ApiGateway::DomainName
     Properties:
       DomainName: !Sub "api-${AWS::Region}.easylayers.dev"
-      CertificateArn: arn:aws:acm:us-east-1:737802338670:certificate/74bbd679-a2eb-417b-b89c-a4dea0387397
+      CertificateArn: !Sub "arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/74bbd679-a2eb-417b-b89c-a4dea0387397"
   
   APIMapping:
     Type: AWS::ApiGateway::BasePathMapping
@@ -70,7 +70,7 @@ Resources:
                             "Action": [
                                 "logs:CreateLogGroup"
                             ],
-                            "Resource": "arn:aws:logs:us-east-1:737802338670:*",
+                            "Resource": "arn:aws:logs:us-east-1:${AWS::AccountId}:*",
                             "Effect": "Allow"
                         },
                         {
@@ -79,7 +79,7 @@ Resources:
                                 "logs:PutLogEvents"
                             ],
                             "Resource": [
-                                "arn:aws:logs:us-east-1:737802338670:log-group:/aws/lambda/*"
+                                "arn:aws:logs:us-east-1:${AWS::AccountId}:log-group:/aws/lambda/*"
                             ],
                             "Effect": "Allow"
                         },
@@ -169,7 +169,7 @@ Resources:
               from pip._vendor.packaging.version import parse
               
           S3 = boto3.resource('s3')
-          Bucket = S3.Bucket('easy-layers-us-east-1')
+          Bucket = S3.Bucket('easy-layers-dev-us-east-1')
           Lambda = boto3.client('lambda')
 
           def lambda_handler(event, context):
@@ -254,7 +254,7 @@ Resources:
               try:
                   new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                               Content= {
-                                                                  'S3Bucket': 'easy-layers-us-east-1',
+                                                                  'S3Bucket': 'easy-layers-dev-us-east-1',
                                                                   'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                               CompatibleRuntimes=[run_time],
                                                               CompatibleArchitectures=[machine])
@@ -308,7 +308,7 @@ Resources:
               from pip._vendor.packaging.version import parse
               
           S3 = boto3.resource('s3')
-          Bucket = S3.Bucket('easy-layers-us-east-1')
+          Bucket = S3.Bucket('easy-layers-dev-us-east-1')
           Lambda = boto3.client('lambda')
 
           def lambda_handler(event, context):
@@ -393,7 +393,7 @@ Resources:
               try:
                   new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                               Content= {
-                                                                  'S3Bucket': 'easy-layers-us-east-1',
+                                                                  'S3Bucket': 'easy-layers-dev-us-east-1',
                                                                   'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                               CompatibleRuntimes=[run_time],
                                                               CompatibleArchitectures=[machine])
@@ -447,7 +447,7 @@ Resources:
               from pip._vendor.packaging.version import parse
               
           S3 = boto3.resource('s3')
-          Bucket = S3.Bucket('easy-layers-us-east-1')
+          Bucket = S3.Bucket('easy-layers-dev-us-east-1')
           Lambda = boto3.client('lambda')
 
           def lambda_handler(event, context):
@@ -532,7 +532,7 @@ Resources:
               try:
                   new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                               Content= {
-                                                                  'S3Bucket': 'easy-layers-us-east-1',
+                                                                  'S3Bucket': 'easy-layers-dev-us-east-1',
                                                                   'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                               CompatibleRuntimes=[run_time],
                                                               CompatibleArchitectures=[machine])
@@ -586,7 +586,7 @@ Resources:
               from pip._vendor.packaging.version import parse
               
           S3 = boto3.resource('s3')
-          Bucket = S3.Bucket('easy-layers-us-east-1')
+          Bucket = S3.Bucket('easy-layers-dev-us-east-1')
           Lambda = boto3.client('lambda')
 
           def lambda_handler(event, context):
@@ -671,7 +671,7 @@ Resources:
               try:
                   new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                               Content= {
-                                                                  'S3Bucket': 'easy-layers-us-east-1',
+                                                                  'S3Bucket': 'easy-layers-dev-us-east-1',
                                                                   'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                               CompatibleRuntimes=[run_time],
                                                               CompatibleArchitectures=[machine])
