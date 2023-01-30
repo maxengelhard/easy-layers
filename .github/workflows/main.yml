@@ -34,10 +34,14 @@ jobs:
     - name: Copy files to the frontend-bucket
       run:
         aws s3 sync './build' s3://easy-layers.dev
+    - name: Copy files to www frontend
+      run:
         aws s3 sync './build' s3://www.easy-layers.dev 
-    - name: Copy files to the s3 backend buckets
+    - name: Copy files to the s3 backend bucket us-east-1
       run:
         aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-1/functions
+    - name: Copy files to the s3 backend bucket us-east-2
+      run:
         aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-2/functions
 
     # - name: Deploy to AWS CloudFormation
