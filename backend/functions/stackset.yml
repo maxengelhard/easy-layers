@@ -25,7 +25,7 @@ Resources:
     Type: AWS::ApiGateway::DomainName
     Properties:
       DomainName: !Sub "api-${AWS::Region}.easylayers.dev"
-      CertificateArn: !Sub "arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/85a56be5-3037-4cf1-bf67-175a16f71573"
+      CertificateArn: !Sub "arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/ded291ef-1b9d-421b-936a-2de899a75c6e"
   
   APIMapping:
     Type: AWS::ApiGateway::BasePathMapping
