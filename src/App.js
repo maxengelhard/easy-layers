@@ -6,8 +6,8 @@ import './App.css';
 
 /* components */
 import Header from './components/Header';
-import Footer from './components/footer';
-// import VerticalAd from './components/verticalAd';
+// import Footer from './components/footer';
+import VerticalAd from './components/verticalAd';
 
 /* views */
 import Home from './views/Home';
@@ -22,7 +22,7 @@ function App() {
        <Router>
       <div className="sidebar">
         <Header />
-        <Footer />
+        <VerticalAd />
       </div>
       <div className="main-content">
         <Routes>

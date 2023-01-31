@@ -1,31 +1,46 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import scriptjs from 'scriptjs';
+
 
 const VerticalAd = () => {
-
-
-    // const push_fun = () => {
-    //     if (!window.adsbygoogle) {
-    //         (window.adsbygoogle = window.adsbygoogle || []).push({})
-    //     }    
-    // }
+    
+    useEffect( () => {
+    // const script = document.createElement('script');
+    // script.async = true;
+    // script.src = "//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=df2357f2-adc7-4060-8268-a6474f63b57d";
+    // document.body.appendChild(script);
+    scriptjs("//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=df2357f2-adc7-4060-8268-a6474f63b57d", () => {
+      return
+    });
+    },[])
     
     
-
     return (
-        <div>
-            {/* {push_fun()} */}
-        {/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3342718309418506"
-            crossOrigin="anonymous"></script>
-        <ins className="adsbygoogle"
-            style={{"display":"block"}}
-            data-ad-client="ca-pub-3342718309418506"
-            data-ad-slot="8513881854"
-            data-ad-format="auto"
-            data-full-width-responsive="true"></ins> */}
-            <div id="amzn-assoc-ad-df2357f2-adc7-4060-8268-a6474f63b57d"></div>
+        <div 
+        style={{
+        //   position: 'fixed',
+        //   bottom: 0,
+        //   width: '100%',
+        //   backgroundColor: '#006699',
+          textAlign: 'center',
+          padding: '5px',
+          margin: 'auto',
+          overflowY: 'scroll',
+          
+        //   height: '15vh',
+        //   left: '15%',
+        //   display: 'flex',
+        //   justifyContent: 'center',
+        //   alignItems: 'center'
+        }}
+        >
+          <div style={{ height: '80vh'}} id="amzn-assoc-ad-df2357f2-adc7-4060-8268-a6474f63b57d"></div>
+          {/* <div id="amzn-assoc-ad-e5881a3e-6cb6-43e0-bb6e-4f6e4806f9e3"></div> */}
         </div>
     )
-}
+} 
 
 
-export default VerticalAd
+
+export default VerticalAd;
+

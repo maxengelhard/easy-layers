@@ -18,7 +18,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16.x'
+        node-version: '18.x'
     - name: Install dependencies
       run: npm install
     - name: Build folder
@@ -31,12 +31,9 @@ jobs:
         role-session-name: MySessionName
     - name: zip backend files
       run: zip -r -j ./backend/functions/src/deployment_easy_layers.zip ./backend/functions/src/*
-    # - name: Copy files to the frontend-bucket
-    #   run:
-    #     aws s3 sync './build' s3://easylayers.dev
-    - name: Copy files to www frontend
+    - name: Copy files to frontend site
       run:
-        aws s3 sync './build' s3://www.easylayers.dev 
+        aws s3 sync './build' s3://amazon-cloudfront-secure-static-site-s3bucketroot-1dv4ob9dkuzcq
     - name: Copy files to the s3 backend bucket us-east-1
       run:
         aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-1/functions
@@ -44,9 +41,9 @@ jobs:
       run:
         aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-2/functions
 
-    # - name: Deploy to AWS CloudFormation
-    #   run:
-    #     aws cloudformation deploy --template-file './backend/functions/template.yml' --stack-name DeployLambdasAndApis --no-fail-on-empty-changeset --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
-    # - name: Update Stacksets
-    #   run:
-    #     aws cloudformation update-stack-set --stack-set-name EasyLayersAcrossRegions --template-url https://easy-layers-us-east-1.s3.amazonaws.com/functions/stackset.yml --region us-east-1 --accounts 737802338670 --regions us-east-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
+    - name: Deploy to AWS CloudFormation
+      run:
+        aws cloudformation deploy --template-file './backend/functions/template.yml' --stack-name DeployLambdasAndApis --no-fail-on-empty-changeset --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
+    - name: Update Stacksets
+      run:
+        aws cloudformation update-stack-set --stack-set-name EasyLayersAcrossRegions --template-url https://easy-layers-dev-us-east-1.s3.amazonaws.com/functions/stackset.yml --region us-east-1 --accounts 360548816597 --regions us-east-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
