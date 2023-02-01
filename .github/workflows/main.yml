@@ -44,9 +44,9 @@ jobs:
       run:
         aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-2/functions
 
-    - name: Deploy to AWS CloudFormation
-      run:
-        aws cloudformation deploy --template-file './backend/functions/template.yml' --stack-name DeployLambdasAndApis --no-fail-on-empty-changeset --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
-    - name: Update Stacksets
-      run:
-        aws cloudformation update-stack-set --stack-set-name EasyLayersAcrossRegions --template-url https://easy-layers-dev-us-east-1.s3.amazonaws.com/functions/stackset.yml --region us-east-1 --accounts 360548816597 --regions us-east-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
+    # - name: Deploy to AWS CloudFormation
+    #   run:
+    #     aws cloudformation deploy --template-file './backend/functions/template.yml' --stack-name DeployLambdasAndApis --no-fail-on-empty-changeset --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
+    # - name: Update Stacksets
+    #   run:
+    #     aws cloudformation update-stack-set --stack-set-name EasyLayersAcrossRegions --template-url https://easy-layers-dev-us-east-1.s3.amazonaws.com/functions/stackset.yml --region us-east-1 --accounts 360548816597 --regions us-east-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
