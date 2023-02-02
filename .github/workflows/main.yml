@@ -36,22 +36,22 @@ jobs:
         aws s3 sync './build' s3://amazon-cloudfront-secure-static-site-s3bucketroot-1g2d4hxmcct7s
     - name: Copy files to the s3 backend bucket us-east-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-1/functions --region us-east-1 
+        aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-1/functions
     - name: Copy files to the s3 backend bucket us-east-2
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-2/functions --region us-east-2
+        aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-2/functions
     - name: Copy files to the s3 backend bucket us-west-2
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-us-west-2/functions --region us-west-2
+        aws s3 sync './backend/functions' s3://easy-layers-dev-us-west-2/functions
     - name: Copy files to the s3 backend bucket us-west-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-us-west-1/functions --region us-west-1 
+        aws s3 sync './backend/functions' s3://easy-layers-dev-us-west-1/functions
     - name: Copy files to the s3 backend bucket sa-east-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-sa-east-1/functions --region sa-east-1
+        aws s3 sync './backend/functions' s3://easy-layers-dev-sa-east-1/functions 
     - name: Copy files to the s3 backend bucket me-south-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-me-south-1/functions --region me-south-1
+        aws s3 sync './backend/functions' s3://easy-layers-dev-me-south-1/functions --region me-south-1 
     - name: Copy files to the s3 backend bucket me-central-1
       run:
         aws s3 sync './backend/functions' s3://easy-layers-dev-me-central-1/functions --region me-central-1
