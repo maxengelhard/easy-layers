@@ -48,73 +48,74 @@ jobs:
         aws s3 sync './backend/functions' s3://easy-layers-dev-us-west-1/functions
     - name: Copy files to the s3 backend bucket sa-east-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-sa-east-1/functions 
+        aws s3 sync './backend/functions' s3://easy-layers-dev-sa-east-1/functions
     - name: Copy files to the s3 backend bucket me-south-1
       run:
         aws s3 sync './backend/functions' s3://easy-layers-dev-me-south-1/functions --region me-south-1 
     - name: Copy files to the s3 backend bucket me-central-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-me-central-1/functions --region me-central-1
-     - name: Copy files to the s3 backend bucket eu-west-3
+        aws s3 sync './backend/functions' s3://easy-layers-dev-me-central-1/functions
+    - name: Copy files to the s3 backend bucket eu-west-3
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-west-3/functions --region eu-west-3
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-west-3/functions
     - name: Copy files to the s3 backend bucket eu-west-2
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-west-2/functions  --region eu-west-2   
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-west-2/functions        
     - name: Copy files to the s3 backend bucket eu-west-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-west-1/functions --region eu-west-1
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-west-1/functions
     - name: Copy files to the s3 backend bucket eu-south-2
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-south-2/functions --region eu-south-2
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-south-2/functions
     - name: Copy files to the s3 backend bucket eu-south-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-south-1/functions --region eu-south-1
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-south-1/functions
     - name: Copy files to the s3 backend bucket eu-north-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-north-1/functions --region eu-north-1
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-north-1/functions
+
     - name: Copy files to the s3 backend bucket eu-central-2
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-central-2/functions --region eu-central-2
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-central-2/functions
     - name: Copy files to the s3 backend bucket eu-central-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-central-1/functions --region eu-central-1
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-central-1/functions
     - name: Copy files to the s3 backend bucket ca-central-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-ca-central-1/functions --region ca-central-1
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ca-central-1/functions
     - name: Copy files to the s3 backend bucket ap-southeast-4
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-4/functions --region ap-southeast-4
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-4/functions
     - name: Copy files to the s3 backend bucket ap-southeast-3
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-3/functions --region ap-southeast-3
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-3/functions
     - name: Copy files to the s3 backend bucket ap-southeast-2
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-2/functions --region ap-southeast-2
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-2/functions
     - name: Copy files to the s3 backend bucket ap-southeast-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-1/functions --region ap-southeast-1
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-1/functions
     - name: Copy files to the s3 backend bucket ap-south-2
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-south-2/functions --region ap-south-2     
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-south-2/functions        
     - name: Copy files to the s3 backend bucket ap-south-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-south-1/functions --region ap-south-1
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-south-1/functions
     - name: Copy files to the s3 backend bucket ap-northeast-3
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-northeast-3/functions --region ap-northeast-3
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-northeast-3/functions
     - name: Copy files to the s3 backend bucket ap-northeast-2
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-northeast-2/functions --region ap-northeast-2
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-northeast-2/functions
     - name: Copy files to the s3 backend bucket ap-northeast-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-northeast-1/functions --region ap-northeast-1
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-northeast-1/functions
     - name: Copy files to the s3 backend bucket ap-east-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-east-1/functions --region ap-east-1
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-east-1/functions
     - name: Copy files to the s3 backend bucket af-south-1
       run:
-        aws s3 sync './backend/functions' s3://easy-layers-dev-af-south-1/functions --region af-south-1
+        aws s3 sync './backend/functions' s3://easy-layers-dev-af-south-1/functions
     
 
 
