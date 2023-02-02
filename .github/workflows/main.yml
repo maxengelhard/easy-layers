@@ -40,10 +40,88 @@ jobs:
     - name: Copy files to the s3 backend bucket us-east-2
       run:
         aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-2/functions
+    - name: Copy files to the s3 backend bucket us-west-2
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-us-west-2/functions
+    - name: Copy files to the s3 backend bucket us-west-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-us-west-1/functions
+    - name: Copy files to the s3 backend bucket sa-east-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-sa-east-1/functions
+    - name: Copy files to the s3 backend bucket me-south-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-me-south-1/functions
+    - name: Copy files to the s3 backend bucket me-central-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-me-central-1/functions
+    - name: Copy files to the s3 backend bucket eu-west-3
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-west-3/functions
+    - name: Copy files to the s3 backend bucket eu-west-2
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-west-2/functions        
+    - name: Copy files to the s3 backend bucket eu-west-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-west-1/functions
+    - name: Copy files to the s3 backend bucket eu-south-2
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-south-2/functions
+    - name: Copy files to the s3 backend bucket eu-south-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-south-1/functions
+    - name: Copy files to the s3 backend bucket eu-north-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-north-1/functions
 
-    - name: Deploy to AWS CloudFormation
+    - name: Copy files to the s3 backend bucket eu-central-2
       run:
-        aws cloudformation deploy --template-file './backend/functions/template.yml' --stack-name DeployLambdasAndApis --no-fail-on-empty-changeset --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
-    - name: Update Stacksets
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-central-2/functions
+    - name: Copy files to the s3 backend bucket eu-central-1
       run:
-        aws cloudformation update-stack-set --stack-set-name EasyLayersAcrossRegions --template-url https://easy-layers-dev-us-east-1.s3.amazonaws.com/functions/stackset.yml --region us-east-1 --accounts 360548816597 --regions us-east-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
+        aws s3 sync './backend/functions' s3://easy-layers-dev-eu-central-1/functions
+    - name: Copy files to the s3 backend bucket ca-central-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ca-central-1/functions
+    - name: Copy files to the s3 backend bucket ap-southeast-4
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-4/functions
+    - name: Copy files to the s3 backend bucket ap-southeast-3
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-3/functions
+    - name: Copy files to the s3 backend bucket ap-southeast-2
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-2/functions
+    - name: Copy files to the s3 backend bucket ap-southeast-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-1/functions
+    - name: Copy files to the s3 backend bucket ap-south-2
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-south-2/functions        
+    - name: Copy files to the s3 backend bucket ap-south-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-south-1/functions
+    - name: Copy files to the s3 backend bucket ap-northeast-3
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-northeast-3/functions
+    - name: Copy files to the s3 backend bucket ap-northeast-2
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-northeast-2/functions
+    - name: Copy files to the s3 backend bucket ap-northeast-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-northeast-1/functions
+    - name: Copy files to the s3 backend bucket ap-east-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-ap-east-1/functions
+    - name: Copy files to the s3 backend bucket af-south-1
+      run:
+        aws s3 sync './backend/functions' s3://easy-layers-dev-af-south-1/functions
+    
+
+
+    # - name: Deploy to AWS CloudFormation
+    #   run:
+    #     aws cloudformation deploy --template-file './backend/functions/template.yml' --stack-name DeployLambdasApis --no-fail-on-empty-changeset --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
+    # - name: Update Stacksets
+    #   run:
+    #     aws cloudformation update-stack-set --stack-set-name EasyLayersAcrossRegions --template-url https://easy-layers-dev-us-east-1.s3.amazonaws.com/functions/stackset.yml --region us-east-1 --accounts 360548816597 --regions us-east-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
