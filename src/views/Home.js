@@ -1,5 +1,6 @@
-import React , {useState} from 'react';
+import React , {useState , useEffect} from 'react';
 
+import copyLogo from '../copy.png';
 
 /* components */
 import InstallBar from '../components/InstallBar';
@@ -13,7 +14,9 @@ const Home = () => {
     const [selectedRegion, setselectedRegion] = useState('us-east-1');
     const [selectedRunTime, setselectedRuntime] = useState('python3.9');
     const [selectedArchitecture, setselectedArchitecture] = useState('x86_64');
-//     const [createdLayer,setCreatedLayer] = useState(false)
+    const [result, setResult] = useState(false);
+    
+
 
     const handleRegionChange = (newValue) => {
       setselectedRegion(newValue);
@@ -27,13 +30,23 @@ const Home = () => {
       setselectedArchitecture(newValue);
     }
 
-//     const createLayer = async () => {
-//       const endpoint = `create_layer${selectedRunTime==='python3.9' ? '39' : '38'}${selectedArchitecture==='x86_64' ? 'x86': 'arm'}`
-//       const api_gateway = `https://api-${selectedRegion}.easylayers.dev/${endpoint}`
-//       await fetch(`${api_gateway}`)
-//       .then(result => result.json())
-//       .then(result => setCreatedLayer(result))
-//     }
+    const handleResult = (data) => {
+      setResult(data);
+    };
+
+    useEffect(() => {
+      const handleClickOutside = event => {
+        if (result && !event.target.closest('.result')) {
+          setResult(false);
+        }
+      };
+      document.body.addEventListener('click', handleClickOutside);
+      return () => {
+        document.body.removeEventListener('click', handleClickOutside);
+      };
+    }, [result]);
+
+    
 
     return (
       <div className='create-layer'>
@@ -41,6 +54,7 @@ const Home = () => {
         <h3 className='sub_title'>
         Making AWS layers as easy as pip install
         </h3>
+        { !result ? 
         <div className='make-a-layer'>
         <table className='set_conditions_home'>
           <caption>Select Your Conditions</caption>
@@ -60,9 +74,22 @@ const Home = () => {
                       </tr>
                     </thead>
         </table>
-        <InstallBar />
+        <InstallBar onResult={handleResult} selectedRegion={selectedRegion} selectedRunTime={selectedRunTime} selectedArchitecture={selectedArchitecture} />
+         
       </div>
+      : 
+      result === 'loading' ?
+      <div className="loading">
+              <div className="loading-spinner"></div>
+            </div> 
+          :
+          <div className='result'>
+          <div>{`Here's your layer`}</div> 
+          <div onClick={() => {navigator.clipboard.writeText(result["Layer ARN: "])}}><span>{result["Layer ARN: "]}</span> <img src={copyLogo} alt='copylogo'></img></div>
+          </div>
+          }
       {/* <VerticalAd /> */}
+          
       </div>
     );
   }

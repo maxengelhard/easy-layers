@@ -20,6 +20,7 @@ const ExistingLayers = () => {
   
   
   useEffect(() => {
+    setLayers(false)
     const fetchData = async () => {
     const api_gateway = `https://api-${selectedRegion}.easylayers.dev/get_layers`
      await fetch(`${api_gateway}`)

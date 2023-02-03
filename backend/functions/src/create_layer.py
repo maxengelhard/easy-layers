@@ -23,9 +23,12 @@ Lambda = boto3.client('lambda')
 @json_http_resp
 @json_schema_validator(request_schema)
 def lambda_handler(event, context):
+    
+    print(event)
     # Test Access permision to S3
+
     region = '-'.join(event.get('requestContext').get('domainPrefix').split('-')[1:])
-    Bucket = S3.Bucket(f'easy-layers-{region}')
+    Bucket = S3.Bucket(f'easy-layers-dev-{region}')
     try:
         Bucket.objects.limit(count=1)
     except Exception:
@@ -36,18 +39,18 @@ def lambda_handler(event, context):
     except Exception:
         return "This function has no access to Lambda resources, please validate"
     # Create a new layer 
-    result = create_new(event , Bucket, Lambda)
+    result = create_new(event , region, Bucket, Lambda)
     
     print(result)
     
     return result
 
-def create_new(event, Bucket, Lambda):
+def create_new(event, region, Bucket, Lambda):
     # Extract parameters from API
     body =  event["body"]
     library = body["library"]
     library_version = body.get("version")
-    region = body["region"]
+    
 
     machine = 'arm64' if platform.machine() == 'aarch64' else platform.machine()
     run_time = 'python' + '.'.join(sys.version.split(' ')[0].split('.')[0:2])
