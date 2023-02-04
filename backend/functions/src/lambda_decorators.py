@@ -612,6 +612,11 @@ def json_schema_validator(request_schema=None, response_schema=None):
                     )
                 else:
                     try:
+                        try:
+                            object_body = json.loads(event['body'])
+                            event['body'] = object_body
+                        except:
+                            pass
                         jsonschema.validate(event, request_schema)
                     except jsonschema.ValidationError as exception:
                         if hasattr(context, "serverless_sdk"):

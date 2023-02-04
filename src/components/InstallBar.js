@@ -29,20 +29,23 @@ const InstallBar = ({ onResult, selectedRunTime, selectedArchitecture, selectedR
         const api_gateway = `https://api-${selectedRegion}.easylayers.dev/${endpoint}`
         
         onResult('loading')
+        const create_body = version ? {"library" : layer, "version": version} : {"layer" : layer}
+       
         await fetch(`${api_gateway}`,{
           method: 'POST',
-          mode: 'no-cors',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            "layer": layer,
-            "version": version
-            
-          })
+          body: JSON.stringify(create_body)
         })
         .then(result => result.json())
-        .then(result => onResult(result))
+        .then(result => {
+          console.log(result)
+          onResult(result)
+        }).catch(err => {
+          console.log(err)
+          // onResult(err)
+        })
       }
 
     useEffect(() => {

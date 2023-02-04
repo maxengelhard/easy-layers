@@ -76,7 +76,7 @@ def create_new(event, region, Bucket, Lambda):
     layer_exists = check_if_layer_exists(layer_name)
     # if layer exists return the Layer ARN
     if layer_exists:
-        return {"Layer ARN: ": layer_exists}
+        return {"Layer_ARN": layer_exists}
     # if layer doesn't exist the run the process of making a new layer
     # Make sure the dir is empty
     run(["rm" , "-rf", "/tmp/*"])
@@ -110,7 +110,7 @@ def create_new(event, region, Bucket, Lambda):
     try:
         new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                      Content= {
-                                                        'S3Bucket': 'easy-layers-'+ region,
+                                                        'S3Bucket': 'easy-layers-dev-'+ region,
                                                         'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                      CompatibleRuntimes=[run_time],
                                                      CompatibleArchitectures=[machine])
@@ -125,7 +125,7 @@ def create_new(event, region, Bucket, Lambda):
     except Exception as e:
         raise e
     # Return layer version ARN
-    return {"Layer ARN: ": new_layer["LayerVersionArn"]}
+    return {"Layer_ARN": new_layer["LayerVersionArn"]}
     
 
 
