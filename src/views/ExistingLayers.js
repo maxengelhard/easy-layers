@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-
+import axios from 'axios'
 import copyLogo from '../copy.png';
 
 /* components */
@@ -23,11 +23,11 @@ const ExistingLayers = () => {
     setLayers(false)
     const fetchData = async () => {
     const api_gateway = `https://api-${selectedRegion}.easylayers.dev/get_layers`
-     await fetch(`${api_gateway}`)
-     .then(result => result.json())
+     await axios.get(`${api_gateway}`)
      .then(result => {
+      const {data} = result
       const cleanResult = {}
-      result.forEach((layer) => {
+      data.forEach((layer) => {
         const name = layer.LayerName.split('-')[0]
         const version_no_py = layer.LayerName.split('-py')[0]
         const versions = version_no_py.split('-').slice(1).join('-')

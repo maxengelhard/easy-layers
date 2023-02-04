@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'
 
 const InstallBar = ({ onResult, selectedRunTime, selectedArchitecture, selectedRegion }) => {
     const [layer, setLayer] = useState('');
@@ -19,7 +20,6 @@ const InstallBar = ({ onResult, selectedRunTime, selectedArchitecture, selectedR
             setShake(true)
         }
       else {
-
         createLayer(layer, version);
       }
     }
@@ -29,23 +29,13 @@ const InstallBar = ({ onResult, selectedRunTime, selectedArchitecture, selectedR
         const api_gateway = `https://api-${selectedRegion}.easylayers.dev/${endpoint}`
         
         onResult('loading')
-        const create_body = version ? {"library" : layer, "version": version} : {"layer" : layer}
-       
-        await fetch(`${api_gateway}`,{
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(create_body)
-        })
-        .then(result => result.json())
-        .then(result => {
-          console.log(result)
-          onResult(result)
-        }).catch(err => {
-          console.log(err)
-          // onResult(err)
-        })
+        const create_body = version ? {"library" : layer, "version": version} : {"library" : layer}
+        
+        await axios.post(`${api_gateway}`,JSON.stringify(create_body))
+        .then(response => {
+          const {data} = response
+          onResult(data.Layer_ARN)
+        }).catch(err => console.error(err))
       }
 
     useEffect(() => {
