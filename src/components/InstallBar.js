@@ -29,9 +29,11 @@ const InstallBar = ({ onResult, selectedRunTime, selectedArchitecture, selectedR
         const api_gateway = `https://api-${selectedRegion}.easylayers.dev/${endpoint}`
         
         onResult('loading')
-        const create_body = version ? {"library" : layer, "version": version} : {"library" : layer}
         
-        await axios.post(`${api_gateway}`,JSON.stringify(create_body))
+        const create_body = version ? {"library" : layer, "version": version} : {"library" : layer}
+
+        
+        await axios.post(`${api_gateway}`,JSON.stringify(create_body), {timeout: 300000})
         .then(response => {
           const {data} = response
           onResult(data.Layer_ARN)
