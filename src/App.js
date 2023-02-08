@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState,useEffect} from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 /*css */
@@ -16,13 +16,24 @@ import ExistingLayers from './views/ExistingLayers';
 
 
 function App() {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
+    
    
     <div className="App">
        <Router>
       <div className="sidebar">
         <Header />
-        <VerticalAd />
+        {width>=600 ? <VerticalAd /> :null }
       </div>
       <div className="main-content">
         <Routes>
@@ -31,7 +42,7 @@ function App() {
           <Route path="/about" element={<About />} />
         </Routes>
       </div>
-      
+      {width<600 ? <VerticalAd /> :null } 
       </Router>
       
     </div>
