@@ -31,7 +31,7 @@ const DropdownMenu = ({items,defaultValue,title,onValueChange}) => {
   }, [isOpen]);
 
   return (
-    <div className="dropdown">
+    <div className={`dropdown ${isOpen ? 'show' : ''}`}>
         <div>{title}</div>
         <button onClick={toggleMenu}>{filter}</button>
       <ul className={`dropdown-menu ${isOpen ? 'show' : ''}`}>

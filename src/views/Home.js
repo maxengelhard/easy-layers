@@ -34,10 +34,7 @@ const Home = () => {
       setResult(data);
     };
 
-    const create_another_layer = () => {
-      
-      
-    }
+   
     useEffect(() => {
       const handleClickOutside = event => {
         if (result!=='loading' && !event.target.closest('.result')) {
@@ -53,15 +50,16 @@ const Home = () => {
     const display_layer_styles = {
       container: {
         display: "flex",
-        alignItems: "center"
+        alignItems: "center",
+        textAlign: "center"
       },
       image: {
-        height: "1em",
+        height: "1.25em",
         marginRight: "0.5em",
-        width: "1em"
+        width: "1.25em"
       },
       text: {
-        fontSize: "1em"
+        fontSize: "1.25em"
       }
     };
     
@@ -103,12 +101,15 @@ const Home = () => {
               <div className="loading-spinner"></div>
             </div> 
           :
-          <div>
+          <div className='completedResult'>
           <div style={display_layer_styles.container} className='result'>
-          <div  onClick={() => {navigator.clipboard.writeText(result)}}><span style={display_layer_styles.text}>{`Here's your layer: ${result}`}</span><img style={display_layer_styles.image} src={copyLogo} alt='copylogo'></img></div>
+          
+          <div style={display_layer_styles.text} className='resulting_layer_arn' onClick={() => {navigator.clipboard.writeText(result)}}>Here's your layer<br></br><br></br><span >{result}</span><img style={display_layer_styles.image} src={copyLogo} alt='copylogo'></img></div>
           
           </div>
-          <button onClick={() => create_another_layer()}>Create Another Layer</button>
+          <br></br>
+          <br></br>
+          <button className='createAnother'>Create Another Layer</button>
           </div>
           }
       {/* <VerticalAd /> */}

@@ -14,6 +14,9 @@ a {
   text-decoration: none;
 }
 
+button {
+  border-radius: 24px;
+}
 a:hover {
   text-decoration: underline;
 }
@@ -139,7 +142,7 @@ img {
   width: 100%;
   margin-top: 10px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 24px;
 }
 
 /* create layer buttons */
@@ -176,7 +179,9 @@ img {
   height: 25%;
   width: 100%;
   font-size: min(max(14px, 2vw), 20px);
-  padding: min(max(10px, 1vw), 16px); 
+  padding: min(max(10px, 1vw), 16px);
+  border-radius: 0px 0px 12px 12px; 
+  
 }
 
 .shake {
@@ -317,6 +322,11 @@ td img {
   background-color: #eee;
 }
 
+.resulting_layer_arn:active span {
+ /* style applied when the component is being clicked or activated */
+ background-color: #eee; 
+}
+
 
 .layer_runtimes {
   width: 15%;
@@ -356,6 +366,7 @@ td img {
 
 .filters th {
   width: 25%;
+  background-color: #FFFFFF;
 }
 
 
@@ -368,6 +379,10 @@ td img {
   font-size: min(max(14px, 2vw), 20px);
 }
 
+.dropdown.show button {
+  border-radius: 12px 12px 0px 0px;
+}
+
 .dropdown-menu {
   position: absolute;
   top: 100%;
@@ -376,21 +391,22 @@ td img {
   display: none;
   float: left;
   min-width: 160px;
-  padding: 5px 0;
-  margin: 2px 0 0;
+  padding: 0px 0px 5px 0px;
+  margin: 0px 0 0;
   list-style: none;
   font-size: min(max(14px, 2vw), 20px);
   background-color: #ffffff;
-  border: 1px solid #cccccc;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  border-radius: 4px;
 }
 
 .dropdown-menu.show {
   display: block;
   max-height: 300px;
   overflow: auto;
+  width: 100%;
+  border-radius: 0px 0px 12px 12px;
 }
 
 .dropdown-item {
@@ -424,7 +440,6 @@ td img {
   position: relative;
   float: left;
   width: 100%;
-  margin-bottom: 5px;
 }
 
 .dropdown-search input {
@@ -445,4 +460,20 @@ td img {
 .dropdown button {
   width: 100%;
   font-size: min(max(14px, 2vw), 20px);
+  
+}
+
+.completedResult {
+  display: block;
+  text-align: center;
+  padding: 10% 10px;
+  margin-top: 50px;
+  border: 5px dashed greenyellow;
+
+}
+
+.createAnother {
+  width: 40%;
+  height: 5vh;
+  font-size: 1.25em;
 }
