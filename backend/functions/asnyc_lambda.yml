@@ -1,0 +1,142 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: "SAM template for backend and related functions"
+
+Metadata:
+  Globals:
+    Function:
+      Tracing: Active
+    Api:
+      Cors: 
+        AllowMethods: "'GET,POST,PUT,PATCH,DELETE,OPTIONS'"
+        AllowHeaders: "'Accept-Encoding,Content-Encoding,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Client-ID,key,secret,session'"
+        AllowOrigin: "'*'"
+
+Resources:
+  # define api gateway
+  ApiGatewayBackend:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prd
+      Name: get_layers_api
+  # define the queue
+  MySqsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: my-queue
+      VisibilityTimeout: 310
+
+  SendToQueue:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri:
+        Bucket: !Sub "easy-layers-${AWS::Region}"
+        Key: functions/src/deployment_easy_layers.zip
+      FunctionName: send_to_queue_39x86
+      Handler: send_to_queue.lambda_handler
+      Runtime: python3.9
+      Architectures: 
+        - x86_64
+      Description: Takes in an api and send it to SQS
+      Timeout: 10
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ApiGatewayBackend
+            Path: /create_layer39x86
+            Method: post
+      Layers:
+        - arn:aws:lambda:us-east-1:737802338670:layer:jsonschema-x-py39-x86:1
+        - arn:aws:lambda:us-east-1:737802338670:layer:requests-x-py39-x86:1
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+            Resource:
+              - "*"
+
+  CreateLayer39x86:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri:
+        Bucket: !Sub "easy-layers-${AWS::Region}"
+        Key: functions/src/deployment_easy_layers.zip
+      FunctionName: create_layer_easy_layers_39x86
+      Handler: create_layer.lambda_handler
+      Runtime: python3.9
+      Architectures: 
+        - x86_64
+      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.9 x86
+      Timeout: 300
+      Events:
+        MySQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt MySqsQueue.Arn
+            BatchSize: 1
+      Layers:
+        - arn:aws:lambda:us-east-1:737802338670:layer:jsonschema-x-py39-x86:1
+        - arn:aws:lambda:us-east-1:737802338670:layer:requests-x-py39-x86:1
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Sid: VisualEditor0
+            Effect: Allow
+            Action:
+              - lambda:ListFunctions
+              - lambda:ListLayerVersions
+              - lambda:ListLayers
+            Resource: "*"
+          - Sid: VisualEditor1
+            Effect: Allow
+            Action:
+              - lambda:GetLayerVersion
+              - lambda:DeleteLayerVersion
+              - lambda:AddLayerVersionPermission
+            Resource: "*"
+          - Sid: VisualEditor2
+            Effect: Allow
+            Action:
+              - s3:PutObject
+              - s3:GetObjectAcl
+              - s3:GetObject
+              - logs:CreateLogStream
+              - lambda:PublishLayerVersion
+              - s3:ListBucket
+              - logs:PutLogEvents
+            Resource:
+              - "*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+              - sqs:ReceiveMessage
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+            Resource:
+              - "*"

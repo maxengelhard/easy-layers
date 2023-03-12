@@ -728,7 +728,16 @@ Resources:
     Properties:
       ServiceToken: !GetAtt CreateNeededLayer38x86.Arn
 
-  
+  # set up queues for async functions
+  # define the queue
+  EasyLayerSqsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: easy-layers-queue
+      VisibilityTimeout: 310
+
+
+
   # define the Lambda function and its code
   CreateLayer39x86:
     Type: AWS::Serverless::Function
@@ -1037,4 +1046,237 @@ Resources:
               Resource: 
                 - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/easy_layers_get_layers:*"
 
+####### Websocket Portion
+
+  ConnectionsTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: !Sub "easy-layers-dev-${AWS::Region}-websocket-connections"
+      KeySchema:
+        - AttributeName: connectionId
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: connectionId
+          AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
+  WebSocketApi:
+    Type: 'AWS::ApiGatewayV2::Api'
+    Properties:
+      Name: WebSocketApi
+      ProtocolType: WEBSOCKET
+      RouteSelectionExpression: $request.body.action 
   
+  WebsocketApiMapping:
+    Type: 'AWS::ApiGatewayV2::ApiMapping'
+    DependsOn: WebSocketApi
+    Properties:
+      DomainName: !Sub "api-${AWS::Region}.easylayers.dev"
+      ApiMappingKey: 'v1'
+      ApiId: !Ref WebSocketApi
+      Stage: !Ref WebsocketStage 
+  
+  WebSocketIntegrationConnect:
+    Type: 'AWS::ApiGatewayV2::Integration'
+    Properties:
+      ApiId: !Ref WebSocketApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WebSocketFunctionConnect.Arn}/invocations"
+  
+  WebSocketRouteConnect:
+    Type: 'AWS::ApiGatewayV2::Route'
+    Properties:
+      ApiId: !Ref WebSocketApi
+      RouteKey: '$connect'
+      AuthorizationType: NONE
+      Target: !Join [ '/', [ 'integrations', !Ref WebSocketIntegrationConnect ] ]
+
+  WebsocketRouteConnectIntegrationPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt WebSocketFunctionConnect.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref WebSocketApi
+          - /*/$connect
+
+  WebSocketIntegrationDisconnect:
+    Type: 'AWS::ApiGatewayV2::Integration'
+    Properties:
+      ApiId: !Ref WebSocketApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WebSocketFunctionDisconnect.Arn}/invocations"
+  
+  WebSocketRouteDisconnect:
+    Type: 'AWS::ApiGatewayV2::Route'
+    Properties:
+      ApiId: !Ref WebSocketApi
+      RouteKey: '$disconnect'
+      AuthorizationType: NONE
+      Target: !Join [ '/', [ 'integrations', !Ref WebSocketIntegrationDisconnect ] ]
+
+  WebsocketRouteDisonnectIntegrationPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt WebSocketFunctionDisconnect.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join 
+        - ''
+        - - 'arn:'
+          - !Ref 'AWS::Partition'
+          - ':execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref WebSocketApi
+          - /*/$disconnect
+
+  WebSocketIntegrationMessage:
+    Type: 'AWS::ApiGatewayV2::Integration'
+    Properties:
+      ApiId: !Ref WebSocketApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WebSocketFunctionMessage.Arn}/invocations"
+  
+  WebSocketRouteMessage:
+    Type: 'AWS::ApiGatewayV2::Route'
+    Properties:
+      ApiId: !Ref WebSocketApi
+      RouteKey: '$default'
+      AuthorizationType: NONE
+      Target: !Join [ '/', [ 'integrations', !Ref WebSocketIntegrationMessage ] ]
+
+  WebSocketDeployment:
+    Type: 'AWS::ApiGatewayV2::Deployment'
+    DependsOn:
+      - WebSocketRouteConnect
+      - WebSocketRouteDisconnect
+      - WebSocketRouteMessage
+    Properties:
+      ApiId: !Ref WebSocketApi
+  WebSocketStage:
+    Type: 'AWS::ApiGatewayV2::Stage'
+    Properties:
+      ApiId: !Ref WebSocketApi
+      DeploymentId: !Ref WebSocketDeployment
+      StageName: prod
+
+  WebSocketFunctionConnect:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri:
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
+        Key: functions/src/deployment_easy_layers.zip
+      FunctionName: websocketconnect
+      Handler: connect.lambda_handler
+      Runtime: python3.9
+      Architectures: 
+        - x86_64
+      Description: Adds Websocket Connection To DynamoDB 
+      Timeout: 10
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - dynamodb:PutItem
+            Resource:
+              - "*"
+
+  WebSocketFunctionDisconnect:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri:
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
+        Key: functions/src/deployment_easy_layers.zip
+      FunctionName: websocketdisconnect
+      Handler: disconnect.lambda_handler
+      Runtime: python3.9
+      Architectures: 
+        - x86_64
+      Description: Deletes A Websocket Connection To DynamoDB
+      Timeout: 10
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - dynamodb:DeleteItem
+            Resource:
+              - "*"
+
+  WebSocketFunctionMessage:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri:
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
+        Key: functions/src/deployment_easy_layers.zip
+      FunctionName: postmessagetowebsocket
+      Handler: post_messages.lambda_handler
+      Runtime: python3.9
+      Architectures: 
+        - x86_64
+      Description: Sends Messages To All Websocket Connections
+      Timeout: 10
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - execute-api:Invoke
+              - execute-api:ManageConnections
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:ConditionCheckItem
+            Resource:
+              - "*"

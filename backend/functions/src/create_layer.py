@@ -23,12 +23,14 @@ Lambda = boto3.client('lambda')
 @json_http_resp
 @json_schema_validator(request_schema)
 def lambda_handler(event, context):
-    
     print(event)
+    message = json.loads(event['Records'][0]['body'])
+    print(message)
     # Test Access permision to S3
 
-    region = '-'.join(event.get('requestContext').get('domainPrefix').split('-')[1:])
-    Bucket = S3.Bucket(f'easy-layers-dev-{region}')
+    region = event['Records'][0]['awsRegion']
+    print(region)
+    Bucket = S3.Bucket(f'easy-layers-{region}')
     try:
         Bucket.objects.limit(count=1)
     except Exception:
@@ -39,7 +41,7 @@ def lambda_handler(event, context):
     except Exception:
         return "This function has no access to Lambda resources, please validate"
     # Create a new layer 
-    result = create_new(event , region, Bucket, Lambda)
+    result = create_new(message , region, Bucket, Lambda)
     
     print(result)
     
@@ -47,7 +49,8 @@ def lambda_handler(event, context):
 
 def create_new(event, region, Bucket, Lambda):
     # Extract parameters from API
-    body =  event["body"]
+    body =  json.loads(event["body"])
+    print(body)
     library = body["library"]
     library_version = body.get("version")
     
@@ -110,7 +113,7 @@ def create_new(event, region, Bucket, Lambda):
     try:
         new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                      Content= {
-                                                        'S3Bucket': 'easy-layers-dev-'+ region,
+                                                        'S3Bucket': 'easy-layers-'+ region,
                                                         'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                      CompatibleRuntimes=[run_time],
                                                      CompatibleArchitectures=[machine])
