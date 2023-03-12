@@ -728,7 +728,14 @@ Resources:
     Properties:
       ServiceToken: !GetAtt CreateNeededLayer38x86.Arn
 
-  
+  # set up queues for async functions
+  # define the queue
+  EasyLayerSqsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: easy-layers-queue
+      VisibilityTimeout: 310
+
   # define the Lambda function and its code
   CreateLayer39x86:
     Type: AWS::Serverless::Function
