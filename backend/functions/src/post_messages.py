@@ -1,8 +1,10 @@
 import json
 import boto3
+import os
 
 ddb = boto3.client('dynamodb')
-table_name = 'easy-layer-websocket-connections'
+region = os.environ.get('AWS_REGION')
+table_name = f'easy-layers-dev-{region}-websocket-connections'
 
 def lambda_handler(event, context):
     print(event)
@@ -21,5 +23,5 @@ def lambda_handler(event, context):
     }
 
 def send_message(connection_id, message):
-    gatewayapi = boto3.client('apigatewaymanagementapi', endpoint_url=f'https://hp76daqm5g.execute-api.us-east-1.amazonaws.com/prod')
+    gatewayapi = boto3.client('apigatewaymanagementapi', endpoint_url=f'https://wss-{region}.easylayers.dev')
     gatewayapi.post_to_connection(ConnectionId=connection_id, Data=json.dumps(message))

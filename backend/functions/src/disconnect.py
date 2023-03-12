@@ -1,7 +1,9 @@
 import boto3
+import os
 
 ddb = boto3.client('dynamodb')
-table_name = 'easy-layer-websocket-connections'
+region = os.environ.get('AWS_REGION')
+table_name = f'easy-layers-dev-{region}-websocket-connections'
 
 def lambda_handler(event, context):
     print(event)
