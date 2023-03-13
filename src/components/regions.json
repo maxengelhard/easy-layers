@@ -56,12 +56,6 @@
         },
         {
             "attributes": {
-                "aws:region": "us-gov-west-1"
-            },
-            "id": "lambda:us-gov-west-1"
-        },
-        {
-            "attributes": {
                 "aws:region": "ap-east-1"
             },
             "id": "lambda:ap-east-1"
@@ -107,12 +101,6 @@
                 "aws:region": "us-east-2"
             },
             "id": "lambda:us-east-2"
-        },
-        {
-            "attributes": {
-                "aws:region": "us-gov-east-1"
-            },
-            "id": "lambda:us-gov-east-1"
         },
         {
             "attributes": {
