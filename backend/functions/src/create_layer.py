@@ -30,7 +30,7 @@ def lambda_handler(event, context):
 
     region = event['Records'][0]['awsRegion']
     print(region)
-    Bucket = S3.Bucket(f'easy-layers-{region}')
+    Bucket = S3.Bucket(f'easy-layers-dev-{region}')
     try:
         Bucket.objects.limit(count=1)
     except Exception:
@@ -113,7 +113,7 @@ def create_new(event, region, Bucket, Lambda):
     try:
         new_layer = Lambda.publish_layer_version(LayerName= layer_name,
                                                      Content= {
-                                                        'S3Bucket': 'easy-layers-'+ region,
+                                                        'S3Bucket': 'easy-layers-dev-'+ region,
                                                         'S3Key':  "layers_repository/" + layer_name + ".zip"},
                                                      CompatibleRuntimes=[run_time],
                                                      CompatibleArchitectures=[machine])
