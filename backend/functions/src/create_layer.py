@@ -24,7 +24,7 @@ def lambda_handler(event, context):
     Bucket = S3.Bucket(f'easy-layers-dev-{region}')
     
     # Extract parameters from API
-    body =  json.loads(message["body"])
+    body =  message["body"]
     print(body)
     library = body["library"]
     library_version = body.get("version")
@@ -38,7 +38,7 @@ def lambda_handler(event, context):
     # get the library name and if it has versions make it like such requests==2.28.1
     library_install = library if library_version is None else library + "==" + library_version
     # Check if the package  exists 
-    max_version = body['max_version'] 
+    max_version = message['max_version'] 
     max_version_and_lib = library + "==" + str(max_version)
 
     # make the layer name readable and consistent of an ARN and for S3
@@ -201,6 +201,12 @@ def send_message(connection_id, message):
 #     # Return libraries versions
 #     return libraries_json
     
+
+    
+    
+    
+    
+
 
     
     
