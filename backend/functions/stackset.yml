@@ -1076,9 +1076,9 @@ Resources:
       Type: A
       HostedZoneId: Z01613042LX65UZV97A4C
       AliasTarget:
-        DNSName: !GetAtt ApiDomain.DistributionDomainName
+        DNSName: !GetAtt WebSocketDomainName.RegionalDomainName
         EvaluateTargetHealth: false
-        HostedZoneId: !GetAtt ApiDomain.DistributionHostedZoneId 
+        HostedZoneId: !GetAtt WebSocketDomainName.RegionalHostedZoneId 
   
   WebSocketDomainName:
     Type: AWS::ApiGatewayV2::DomainName
