@@ -16,17 +16,13 @@ try:
 except ImportError:
     from pip._vendor.packaging.version import parse
 
-class SQSMessage:
-    def __init__(self, event ):
-        self.event = event
-
 sqs = boto3.client('sqs')
 
 @cors_headers
 @json_http_resp
 @json_schema_validator(request_schema)
 def lambda_handler(event, context):
-    
+    print(event)
     machine = 'arm' if platform.machine() == 'aarch64' else 'x86'
     run_time = ''.join(sys.version.split(' ')[0].split('.')[0:2])
     queue_name = f'py-{run_time}-{machine}-sqs-queue' 
@@ -34,9 +30,9 @@ def lambda_handler(event, context):
     region = os.environ.get('AWS_REGION')
     queue_url = f'https://sqs.{region}.amazonaws.com/{aws_account_id}/{queue_name}'
     
-
+    
     # Extract parameters from API
-    body =  json.loads(event["body"])
+    body = event["body"]
     print(body)
     library = body["library"]
     library_version = body.get("version")
@@ -50,9 +46,9 @@ def lambda_handler(event, context):
     # get the library name and if it has versions make it like such requests==2.28.1
     library_install = library if library_version is None else library + "==" + library_version
     # Check if the package  exists 
-    max_version = check_if_package_exists(library,library_version,library_install)
+    max_version = str(check_if_package_exists(library,library_version,library_install)) 
 
-    max_version_and_lib = library + "==" + str(max_version)
+    max_version_and_lib = library + "==" + max_version
 
     # make the layer name readable and consistent of an ARN and for S3
     library_and_version=None
@@ -72,11 +68,8 @@ def lambda_handler(event, context):
     message = event
     message['max_version'] = max_version
 
-    response = sqs.send_message(QueueUrl=queue_url, MessageBody=message)
-    return {
-        'statusCode': 200,
-        'body': json.dumps('Message sent successfully')
-    }
+    response = sqs.send_message(QueueUrl=queue_url, MessageBody=json.dumps(message))
+    return 'Message sent successfully'
 
 
 
