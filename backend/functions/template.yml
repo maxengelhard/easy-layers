@@ -986,7 +986,7 @@ Resources:
         SQSEvent:
           Type: SQS
           Properties:
-            Queue: !GetAtt SendToQueue39x86.Arn
+            Queue: !GetAtt Py39x86SqsQueue.Arn
             BatchSize: 1
       Layers:
         - !GetAtt TriggerNeededLayers39x86.jsonschema
@@ -1072,7 +1072,7 @@ Resources:
         SQSEvent:
           Type: SQS
           Properties:
-            Queue: !GetAtt SendToQueue38x86.Arn
+            Queue: !GetAtt Py38x86SqsQueue.Arn
             BatchSize: 1
       Layers:
         - !GetAtt TriggerNeededLayers38x86.jsonschema
@@ -1158,7 +1158,7 @@ Resources:
         SQSEvent:
           Type: SQS
           Properties:
-            Queue: !GetAtt SendToQueue39arm.Arn
+            Queue: !GetAtt Py39ArmSqsQueue.Arn
             BatchSize: 1
       Layers:
         - !GetAtt TriggerNeededLayers39arm.jsonschema
@@ -1244,7 +1244,7 @@ Resources:
         SQSEvent:
           Type: SQS
           Properties:
-            Queue: !GetAtt SendToQueue38arm.Arn
+            Queue: !GetAtt Py38ArmSqsQueue.Arn
             BatchSize: 1
       Layers:
         - !GetAtt TriggerNeededLayers38arm.jsonschema
@@ -1390,9 +1390,9 @@ Resources:
       Type: A
       HostedZoneId: Z01613042LX65UZV97A4C
       AliasTarget:
-        DNSName: !GetAtt ApiDomain.DistributionDomainName
+        DNSName: !GetAtt WebSocketDomainName.RegionalDomainName
         EvaluateTargetHealth: false
-        HostedZoneId: !GetAtt ApiDomain.DistributionHostedZoneId 
+        HostedZoneId: !GetAtt WebSocketDomainName.RegionalHostedZoneId
   
   WebSocketDomainName:
     Type: AWS::ApiGatewayV2::DomainName

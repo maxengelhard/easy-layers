@@ -26,7 +26,7 @@ Resources:
     Properties:
       DomainName: !Sub "api-${AWS::Region}.easylayers.dev"
       CertificateArn: !Sub "arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/bd84a0f2-7e83-46ec-8fe3-fd286b5baf07"
-  
+
   APIMapping:
     Type: AWS::ApiGateway::BasePathMapping
     DependsOn: ApiDomain
@@ -51,7 +51,7 @@ Resources:
   NeededLayerLambdaPolicy:
         Type: "AWS::IAM::ManagedPolicy"
         Properties:
-            ManagedPolicyName: !Sub "needed-layers-lambda-policy-${AWS::Region}"
+            ManagedPolicyName: needed-layers-lambda-policy
             Path: "/service-role/"
             PolicyDocument: !Sub |
                 {
@@ -127,7 +127,7 @@ Resources:
     Type: "AWS::IAM::Role"
     Properties:
         Path: "/service-role/"
-        RoleName: !Sub "needed-layers-lambda-role-${AWS::Region}"
+        RoleName: needed-layers-lambda-role
         AssumeRolePolicyDocument: !Sub |
             {
                 "Version":"2012-10-17",
@@ -429,7 +429,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        ZipFile: !Sub |
+        ZipFile: |
           import json
           import sys 
           import os
@@ -568,7 +568,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        ZipFile: !Sub |
+        ZipFile: |
           import json
           import sys 
           import os
@@ -728,17 +728,246 @@ Resources:
     Properties:
       ServiceToken: !GetAtt CreateNeededLayer38x86.Arn
 
-  # set up queues for async functions
-  # define the queue
-  EasyLayerSqsQueue:
+  # set up queues for processing functions
+  Py39x86SqsQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: easy-layers-queue
+      QueueName: py-39-x86-sqs-queue
       VisibilityTimeout: 310
 
+  Py38x86SqsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: py-38-x86-sqs-queue
+      VisibilityTimeout: 310
 
+  Py39ArmSqsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: py-39-arm-sqs-queue
+      VisibilityTimeout: 310
 
+  Py38ArmSqsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: py-38-arm-sqs-queue
+      VisibilityTimeout: 310
+  
+  # set up the lambda functions that relay api invocations to queue
+  SendToQueue39x86:
+    Type: AWS::Serverless::Function
+    DependsOn: TriggerNeededLayers39x86
+    Properties:
+      CodeUri:
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
+        Key: functions/src/deployment_easy_layers.zip
+      FunctionName: send_to_queue_39x86
+      Handler: send_to_queue.lambda_handler
+      Runtime: python3.9
+      Architectures: 
+        - x86_64
+      Description: Checks If A Layer Exists When Someone Submits Python 3.9 x86 And Sends To Queue
+      Timeout: 10
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ApiGatewayBackend
+            Path: /create_layer39x86
+            Method: post
+      Layers:
+        - !GetAtt TriggerNeededLayers39x86.jsonschema
+        - !GetAtt TriggerNeededLayers39x86.requests
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+            Resource:
+              - "*"
+          - Sid: VisualEditor4
+            Effect: Allow
+            Action:
+              - lambda:ListFunctions
+              - lambda:ListLayerVersions
+              - lambda:ListLayers
+              - lambda:GetLayerVersion
+            Resource: "*"
   # define the Lambda function and its code
+  SendToQueue38x86:
+    Type: AWS::Serverless::Function
+    DependsOn: TriggerNeededLayers38x86
+    Properties:
+      CodeUri:
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
+        Key: functions/src/deployment_easy_layers.zip
+      FunctionName: send_to_queue_38x86
+      Handler: send_to_queue.lambda_handler
+      Runtime: python3.8
+      Architectures: 
+        - x86_64
+      Description: Checks If A Layer Exists When Someone Submits Python 3.8 x86 And Sends To Queue
+      Timeout: 10
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ApiGatewayBackend
+            Path: /create_layer38x86
+            Method: post
+      Layers:
+        - !GetAtt TriggerNeededLayers38x86.jsonschema
+        - !GetAtt TriggerNeededLayers38x86.requests
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+            Resource:
+              - "*"
+          - Sid: VisualEditor4
+            Effect: Allow
+            Action:
+              - lambda:ListFunctions
+              - lambda:ListLayerVersions
+              - lambda:ListLayers
+              - lambda:GetLayerVersion
+            Resource: "*"
+  # define the Lambda function and its code
+  SendToQueue39arm:
+    Type: AWS::Serverless::Function
+    DependsOn: TriggerNeededLayers39arm
+    Properties:
+      CodeUri:
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
+        Key: functions/src/deployment_easy_layers.zip
+      FunctionName: send_to_queue_39arm
+      Handler: send_to_queue.lambda_handler
+      Runtime: python3.9
+      Architectures: 
+        - arm64
+      Description: Checks If A Layer Exists When Someone Submits Python 3.9 arm And Sends To Queue
+      Timeout: 10
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ApiGatewayBackend
+            Path: /create_layer39arm
+            Method: post
+      Layers:
+        - !GetAtt TriggerNeededLayers39arm.jsonschema
+        - !GetAtt TriggerNeededLayers39arm.requests
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+            Resource:
+              - "*"
+          - Sid: VisualEditor4
+            Effect: Allow
+            Action:
+              - lambda:ListFunctions
+              - lambda:ListLayerVersions
+              - lambda:ListLayers
+              - lambda:GetLayerVersion
+            Resource: "*"
+  # send to queue 38 arm
+  SendToQueue38arm:
+    Type: AWS::Serverless::Function
+    DependsOn: TriggerNeededLayers38arm
+    Properties:
+      CodeUri:
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
+        Key: functions/src/deployment_easy_layers.zip
+      FunctionName: send_to_queue_38arm
+      Handler: send_to_queue.lambda_handler
+      Runtime: python3.8
+      Architectures: 
+        - arm64
+      Description: Checks If A Layer Exists When Someone Submits Python 3.8 arm And Sends To Queue
+      Timeout: 10
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ApiGatewayBackend
+            Path: /create_layer38arm
+            Method: post
+      Layers:
+        - !GetAtt TriggerNeededLayers38arm.jsonschema
+        - !GetAtt TriggerNeededLayers38arm.requests
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+            Resource:
+              - "*"
+          - Sid: VisualEditor4
+            Effect: Allow
+            Action:
+              - lambda:ListFunctions
+              - lambda:ListLayerVersions
+              - lambda:ListLayers
+              - lambda:GetLayerVersion
+            Resource: "*"
+              
+
+  # define the Lambda functions that create layers and its code
   CreateLayer39x86:
     Type: AWS::Serverless::Function
     DependsOn: TriggerNeededLayers39x86
@@ -751,16 +980,14 @@ Resources:
       Runtime: python3.9
       Architectures: 
         - x86_64
-      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.9
+      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.9 x86
       Timeout: 300
       Events:
-        ApiEvent:
-          Type: Api
+        SQSEvent:
+          Type: SQS
           Properties:
-            RestApiId:
-              Ref: ApiGatewayBackend
-            Path: /create_layer39x86
-            Method: post
+            Queue: !GetAtt Py39x86SqsQueue.Arn
+            BatchSize: 1
       Layers:
         - !GetAtt TriggerNeededLayers39x86.jsonschema
         - !GetAtt TriggerNeededLayers39x86.requests
@@ -803,6 +1030,29 @@ Resources:
               - logs:PutLogEvents
             Resource:
               - "*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+              - sqs:ReceiveMessage
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+            Resource:
+              - "*"
+          - Sid: VisualEditor4
+            Effect: Allow
+            Action:
+              - execute-api:Invoke
+              - execute-api:ManageConnections
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:ConditionCheckItem
+            Resource:
+              - "*"
   # define the Lambda function and its code
   CreateLayer38x86:
     Type: AWS::Serverless::Function
@@ -816,16 +1066,14 @@ Resources:
       Runtime: python3.8
       Architectures: 
         - x86_64
-      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.8
+      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.8 x86
       Timeout: 300
       Events:
-        ApiEvent:
-          Type: Api
+        SQSEvent:
+          Type: SQS
           Properties:
-            RestApiId:
-              Ref: ApiGatewayBackend
-            Path: /create_layer38x86
-            Method: post
+            Queue: !GetAtt Py38x86SqsQueue.Arn
+            BatchSize: 1
       Layers:
         - !GetAtt TriggerNeededLayers38x86.jsonschema
         - !GetAtt TriggerNeededLayers38x86.requests
@@ -868,7 +1116,29 @@ Resources:
               - logs:PutLogEvents
             Resource:
               - "*"
-
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+              - sqs:ReceiveMessage
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+            Resource:
+              - "*"
+          - Sid: VisualEditor4
+            Effect: Allow
+            Action:
+              - execute-api:Invoke
+              - execute-api:ManageConnections
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:ConditionCheckItem
+            Resource:
+              - "*"
   # define the Lambda function and its code
   CreateLayer39arm:
     Type: AWS::Serverless::Function
@@ -882,16 +1152,14 @@ Resources:
       Runtime: python3.9
       Architectures: 
         - arm64
-      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.9
+      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.9 arm
       Timeout: 300
       Events:
-        ApiEvent:
-          Type: Api
+        SQSEvent:
+          Type: SQS
           Properties:
-            RestApiId:
-              Ref: ApiGatewayBackend
-            Path: /create_layer39arm
-            Method: post
+            Queue: !GetAtt Py39ArmSqsQueue.Arn
+            BatchSize: 1
       Layers:
         - !GetAtt TriggerNeededLayers39arm.jsonschema
         - !GetAtt TriggerNeededLayers39arm.requests
@@ -934,6 +1202,29 @@ Resources:
               - logs:PutLogEvents
             Resource:
               - "*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+              - sqs:ReceiveMessage
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+            Resource:
+              - "*"
+          - Sid: VisualEditor4
+            Effect: Allow
+            Action:
+              - execute-api:Invoke
+              - execute-api:ManageConnections
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:ConditionCheckItem
+            Resource:
+              - "*"
   # define the Lambda function and its code
   CreateLayer38arm:
     Type: AWS::Serverless::Function
@@ -947,16 +1238,14 @@ Resources:
       Runtime: python3.8
       Architectures: 
         - arm64
-      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.8
+      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.8 arm
       Timeout: 300
       Events:
-        ApiEvent:
-          Type: Api
+        SQSEvent:
+          Type: SQS
           Properties:
-            RestApiId:
-              Ref: ApiGatewayBackend
-            Path: /create_layer38arm
-            Method: post
+            Queue: !GetAtt Py38ArmSqsQueue.Arn
+            BatchSize: 1
       Layers:
         - !GetAtt TriggerNeededLayers38arm.jsonschema
         - !GetAtt TriggerNeededLayers38arm.requests
@@ -999,7 +1288,29 @@ Resources:
               - logs:PutLogEvents
             Resource:
               - "*"
-
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+              - sqs:ReceiveMessage
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+            Resource:
+              - "*"
+          - Sid: VisualEditor4
+            Effect: Allow
+            Action:
+              - execute-api:Invoke
+              - execute-api:ManageConnections
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:ConditionCheckItem
+            Resource:
+              - "*"
   GetLayers:
     Type: AWS::Serverless::Function
     Properties:
@@ -1046,6 +1357,9 @@ Resources:
               Resource: 
                 - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/easy_layers_get_layers:*"
 
+  
+###########
+
 ####### Websocket Portion
 
   ConnectionsTable:
@@ -1078,7 +1392,7 @@ Resources:
       AliasTarget:
         DNSName: !GetAtt WebSocketDomainName.RegionalDomainName
         EvaluateTargetHealth: false
-        HostedZoneId: !GetAtt WebSocketDomainName.RegionalHostedZoneId 
+        HostedZoneId: !GetAtt WebSocketDomainName.RegionalHostedZoneId
   
   WebSocketDomainName:
     Type: AWS::ApiGatewayV2::DomainName
