@@ -51,7 +51,7 @@ Resources:
   NeededLayerLambdaPolicy:
         Type: "AWS::IAM::ManagedPolicy"
         Properties:
-            ManagedPolicyName: needed-layers-lambda-policy
+            ManagedPolicyName: !Sub "needed-layers-lambda-policy-${AWS::Region}"
             Path: "/service-role/"
             PolicyDocument: !Sub |
                 {
@@ -127,7 +127,7 @@ Resources:
     Type: "AWS::IAM::Role"
     Properties:
         Path: "/service-role/"
-        RoleName: needed-layers-lambda-role
+        RoleName: !Sub "needed-layers-lambda-role-${AWS::Region}"
         AssumeRolePolicyDocument: !Sub |
             {
                 "Version":"2012-10-17",
@@ -1394,13 +1394,20 @@ Resources:
         EvaluateTargetHealth: false
         HostedZoneId: !GetAtt WebSocketDomainName.RegionalHostedZoneId
   
+  WebsocketCertificate: 
+    Type: "AWS::CertificateManager::Certificate"
+    Properties: 
+      DomainName: !Sub "wss-${AWS::Region}.easylayers.dev"
+      ValidationMethod: DNS
+
   WebSocketDomainName:
     Type: AWS::ApiGatewayV2::DomainName
+    DependsOn: WebsocketCertificate 
     Properties:
       DomainName: !Sub "wss-${AWS::Region}.easylayers.dev"
       DomainNameConfigurations:
         - EndpointType: 'REGIONAL'
-          CertificateArn: !Sub "arn:aws:acm:us-east-1:${AWS::AccountId}:certificate/bd84a0f2-7e83-46ec-8fe3-fd286b5baf07"
+          CertificateArn: !Ref WebsocketCertificate 
 
   WebsocketApiMapping:
     Type: 'AWS::ApiGatewayV2::ApiMapping'
