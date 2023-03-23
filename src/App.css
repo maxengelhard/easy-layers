@@ -553,3 +553,25 @@ td img {
 }
  
 }
+
+.popup-message {
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  font-size: 16px;
+  transition: transform 0.3s, opacity 0.3s;
+  border-radius: 8px;
+}
+
+.popup-message img {
+  width: 2vmin;
+  padding-left: 5px;
+}
+
+.popup-message:active  {
+    /* style applied when the component is being clicked or activated */
+    background-color: #eee;
+}

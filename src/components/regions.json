@@ -17,30 +17,12 @@
                 "aws:region": "ap-southeast-2"
             },
             "id": "lambda:ap-southeast-2"
-        },
-        {
-            "attributes": {
-                "aws:region": "ap-southeast-3"
-            },
-            "id": "lambda:ap-southeast-3"
-        },
-        {
-            "attributes": {
-                "aws:region": "eu-south-2"
-            },
-            "id": "lambda:eu-south-2"
-        },
+        }, 
         {
             "attributes": {
                 "aws:region": "eu-west-2"
             },
             "id": "lambda:eu-west-2"
-        },
-        {
-            "attributes": {
-                "aws:region": "me-central-1"
-            },
-            "id": "lambda:me-central-1"
         },
         {
             "attributes": {
@@ -71,12 +53,6 @@
                 "aws:region": "ap-northeast-2"
             },
             "id": "lambda:ap-northeast-2"
-        },
-        {
-            "attributes": {
-                "aws:region": "eu-central-2"
-            },
-            "id": "lambda:eu-central-2"
         },
         {
             "attributes": {
@@ -122,27 +98,9 @@
         },
         {
             "attributes": {
-                "aws:region": "ap-south-2"
-            },
-            "id": "lambda:ap-south-2"
-        },
-        {
-            "attributes": {
                 "aws:region": "ca-central-1"
             },
             "id": "lambda:ca-central-1"
-        },
-        {
-            "attributes": {
-                "aws:region": "cn-north-1"
-            },
-            "id": "lambda:cn-north-1"
-        },
-        {
-            "attributes": {
-                "aws:region": "cn-northwest-1"
-            },
-            "id": "lambda:cn-northwest-1"
         },
         {
             "attributes": {

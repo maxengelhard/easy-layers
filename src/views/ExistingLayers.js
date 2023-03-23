@@ -28,9 +28,9 @@ const ExistingLayers = () => {
       const {data} = result
       const cleanResult = {}
       data.forEach((layer) => {
-        const version_no_py = layer.LayerName.split('-py')[0]
-        const name = version_no_py.split('-').slice(0,-3).join('-')
-        const versions = version_no_py.split('-').slice(-3).join('-')
+        const version_no_py = layer.LayerName.split('-').slice(0,-2)
+        const name = version_no_py.slice(0,-3).join('-')
+        const versions = version_no_py.slice(-3).join('-')
         if (cleanResult[name]) {
           const acum_arr = cleanResult[name]
           acum_arr.push({"version":versions,"data": layer}) 

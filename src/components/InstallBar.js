@@ -31,7 +31,7 @@ const InstallBar = ({ onResult, selectedRunTime, selectedArchitecture, selectedR
         onResult('loading')
         
         const create_body = version ? {"library" : layer, "version": version} : {"library" : layer}
-        console.log(JSON.stringify(create_body))
+        // console.log(JSON.stringify(create_body))
         
         await axios.post(`${api_gateway}`,JSON.stringify(create_body), {timeout: 300000})
         .then(response => {

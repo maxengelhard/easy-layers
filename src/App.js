@@ -8,11 +8,16 @@ import './App.css';
 import Header from './components/Header';
 // import Footer from './components/footer';
 import VerticalAd from './components/verticalAd';
+import PopupMessage from './components/popupMessage';
 
 /* views */
 import Home from './views/Home';
 import About from './views/About';
 import ExistingLayers from './views/ExistingLayers';
+
+/* regions */
+import regionsJson from './components/regions'
+
 
 
 function App() {
@@ -26,10 +31,43 @@ function App() {
     };
   }, []);
 
+  /* listen to websocket */
+  const [webhookMessage, setWebhookMessage] = useState('');
+  useEffect(() => {
+    const regions = regionsJson['regions'].map((region) => region['attributes']['aws:region'])
+    regions.forEach(region => {
+      const ws = new WebSocket(`wss://wss-${region}.easylayers.dev`);
+      
+      // ws.addEventListener('open', (event) => {
+      //   console.log(`Websocket ${region} connected`)
+      // });
+      
+      ws.addEventListener('message', (event) => {
+        const message = event.data;
+        // console.log('Received message:', message);
+        setWebhookMessage(message);
+        // Do something with the message data, e.g. update React state.
+      });
+      
+    })
+    
+    return
+  },[])
+  
+
+  
+  const handlePopupClose = () => {
+      setWebhookMessage('');
+
+  };
+
   return (
     
    
     <div className="App">
+      {webhookMessage && (
+        <PopupMessage message={webhookMessage} onClose={handlePopupClose} />
+      )}
        <Router>
       <div className="sidebar">
         <Header />
