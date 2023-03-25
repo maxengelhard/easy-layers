@@ -429,6 +429,12 @@ td img {
   background-color: #007bff;
 }
 
+.highlighted {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #007bff;
+}
+
 .dropdown-divider {
   height: 1px;
   margin: 0.5rem 0;
@@ -441,6 +447,8 @@ td img {
   float: left;
   width: 100%;
 }
+
+
 
 .dropdown-search input {
   width: 100%;

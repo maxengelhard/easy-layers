@@ -70,7 +70,7 @@ const Home = () => {
       <div className='create-layer'>
         <h1 className='title'>Welcome to Easy Layers</h1>
         <h3 className='sub_title'>
-        Making AWS layers as easy as pip install
+        Making AWS Python layers as easy as pip install
         </h3>
         { !result ? 
         <div className='make-a-layer'>

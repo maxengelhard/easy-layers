@@ -13,7 +13,7 @@ const PopupMessage = ({ message, onClose }) => {
     const timer = setTimeout(() => {
       setVisible(false);
       onClose();
-    }, 5000);
+    }, 10000);
 
     return () => {
       clearTimeout(timer);
