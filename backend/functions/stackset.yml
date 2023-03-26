@@ -734,24 +734,60 @@ Resources:
     Properties:
       QueueName: py-39-x86-sqs-queue
       VisibilityTimeout: 310
+      RedrivePolicy: 
+        deadLetterTargetArn: 
+          Fn::GetAtt: 
+            - "Py39x86SqsQueueDead"
+            - "Arn"
+        maxReceiveCount: 2
+  
+  Py39x86SqsQueueDead: 
+    Type: AWS::SQS::Queue
 
   Py38x86SqsQueue:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: py-38-x86-sqs-queue
       VisibilityTimeout: 310
+      RedrivePolicy: 
+        deadLetterTargetArn: 
+          Fn::GetAtt: 
+            - "Py38x86SqsQueueDead"
+            - "Arn"
+        maxReceiveCount: 2
+  
+  Py38x86SqsQueueDead: 
+    Type: AWS::SQS::Queue
 
   Py39ArmSqsQueue:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: py-39-arm-sqs-queue
       VisibilityTimeout: 310
+      RedrivePolicy: 
+        deadLetterTargetArn: 
+          Fn::GetAtt: 
+            - "Py39ArmqsQueueDead"
+            - "Arn"
+        maxReceiveCount: 2
+  
+  Py39ArmqsQueueDead: 
+    Type: AWS::SQS::Queue
 
   Py38ArmSqsQueue:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: py-38-arm-sqs-queue
       VisibilityTimeout: 310
+      RedrivePolicy: 
+        deadLetterTargetArn: 
+          Fn::GetAtt: 
+            - "Py38ArmSqsQueueDead"
+            - "Arn"
+        maxReceiveCount: 2
+  
+  Py38ArmSqsQueueDead: 
+    Type: AWS::SQS::Queue
   
   # set up the lambda functions that relay api invocations to queue
   SendToQueue39x86:

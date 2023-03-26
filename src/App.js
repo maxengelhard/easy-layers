@@ -1,5 +1,6 @@
 import React, {useState,useEffect} from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+//import StripeButton from './components/stripeButton';
 
 /*css */
 import './App.css';
@@ -71,7 +72,7 @@ function App() {
        <Router>
       <div className="sidebar">
         <Header />
-        {width>=600 ? <VerticalAd /> :null }
+        {width>=600 ? <div><VerticalAd /> {/* <StripeButton /> */} </div> :null }
       </div>
       <div className="main-content">
         <Routes>
@@ -80,7 +81,9 @@ function App() {
           <Route path="/about" element={<About />} />
         </Routes>
       </div>
-      {width<600 ? <VerticalAd /> :null } 
+      {width<600 ? <div><VerticalAd /> 
+      {/* <StripeButton /> */}
+      </div> :null } 
       </Router>
       
     </div>

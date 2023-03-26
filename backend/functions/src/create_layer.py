@@ -6,6 +6,7 @@ import boto3
 from subprocess import run,CalledProcessError
 from zipfile import ZipFile
 import platform
+import gzip
     
 S3 = boto3.resource('s3')
 Lambda = boto3.client('lambda')
@@ -116,6 +117,9 @@ def zip_directory(folder_path, zip_path):
         len_dir_path = len(folder_path)
         for root, _, files in os.walk(folder_path):
             for file in files:
+                if file_path.endswith('.gz'):
+                    with gzip.open(file_path, 'rb') as f:
+                        zipf.writestr('python/'+file_path[len_dir_path:], f.read())
                 file_path = os.path.join(root, file)
                 zipf.write(file_path, 'python/'+file_path[len_dir_path:])
 

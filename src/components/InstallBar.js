@@ -36,7 +36,8 @@ const InstallBar = ({ onResult, selectedRunTime, selectedArchitecture, selectedR
         await axios.post(`${api_gateway}`,JSON.stringify(create_body), {timeout: 300000})
         .then(response => {
           const {data} = response
-          onResult(data.Layer_ARN)
+          const message = data.Layer_ARN ? data.Layer_ARN : data 
+          onResult(message)
         }).catch(err => console.error(err))
       }
 

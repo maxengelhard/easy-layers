@@ -104,8 +104,10 @@ const Home = () => {
           <div className='completedResult'>
           <div style={display_layer_styles.container} className='result'>
           
+          {result === 'Message sent successfully' ? 
+          <div>Your Layer Has Been Sent For Processing. It Will Appear In The Top Right Of The Screen In Less Than 5 Minutes. It will also be in the Existing Layers Page When It Is Created.</div> :
           <div style={display_layer_styles.text} className='resulting_layer_arn' onClick={() => {navigator.clipboard.writeText(result)}}>Here's your layer<br></br><br></br><span >{result}</span><img style={display_layer_styles.image} src={copyLogo} alt='copylogo'></img></div>
-          
+          }
           </div>
           <br></br>
           <br></br>
