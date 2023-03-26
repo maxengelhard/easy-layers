@@ -771,11 +771,11 @@ Resources:
       RedrivePolicy: 
         deadLetterTargetArn: 
           Fn::GetAtt: 
-            - "Py39ArmqsQueueDead"
+            - "Py39ArmSqsQueueDead"
             - "Arn"
         maxReceiveCount: 2
   
-  Py39ArmqsQueueDead: 
+  Py39ArmSqsQueueDead: 
     Type: AWS::SQS::Queue
     Properties:
       QueueName: py-39-arm-sqs-queue-dead
@@ -1668,11 +1668,7 @@ Resources:
       AttributeDefinitions:
         - AttributeName: "runtime"
           AttributeType: "S"
-        - AttributeName: "machine"
-          AttributeType: "S"
         - AttributeName: "library"
-          AttributeType: "S"
-        - AttributeName: "version"
           AttributeType: "S"
       KeySchema:
         - AttributeName: "runtime"
@@ -1716,8 +1712,8 @@ Resources:
             Queue: !GetAtt Py38ArmSqsQueueDead.Arn
             BatchSize: 1
       Policies:
-        - Statement:
-            - Sid: VisualEditor3
+        Statement:
+          - Sid: VisualEditor0
             Effect: Allow
             Action:
               - sqs:SendMessage
@@ -1725,19 +1721,19 @@ Resources:
               - sqs:DeleteMessage
               - sqs:GetQueueAttributes
             Resource: "*"
-            - Sid: VisualEditor1
-              Effect: Allow
-              Action:
-                - dynamodb:PutItem
-              Resource:
-                - !GetAtt ErrorsTable.Arn 
-            - Sid: VisualEditor2
-              Effect: Allow
-              Action:
-                - logs:CreateLogStream
-                - logs:PutLogEvents
-              Resource: 
-                - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/get_error_layers_easy_layers:*"
+          - Sid: VisualEditor1
+            Effect: Allow
+            Action:
+              - dynamodb:PutItem
+            Resource:
+              - !GetAtt ErrorsTable.Arn 
+          - Sid: VisualEditor2
+            Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/write_error_layers_easy_layers:*"
 
   GetErrorLayers:
     Type: AWS::Serverless::Function

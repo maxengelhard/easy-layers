@@ -18,7 +18,7 @@ def lambda_handler(event, context):
     library_version = body.get("version")
 
     machine = message['machine']
-    run_time = machine['run_time']
+    run_time = message['run_time']
 
     version = library_version if library_version else max_version
 
