@@ -67,6 +67,8 @@ def lambda_handler(event, context):
 
     message = event
     message['max_version'] = max_version
+    message['machine'] = machine
+    message['run_time'] = run_time
 
     response = sqs.send_message(QueueUrl=queue_url, MessageBody=json.dumps(message))
     return 'Message sent successfully'

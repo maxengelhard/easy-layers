@@ -743,6 +743,8 @@ Resources:
   
   Py39x86SqsQueueDead: 
     Type: AWS::SQS::Queue
+    Properties:
+      QueueName: py-39-x86-sqs-queue-dead
 
   Py38x86SqsQueue:
     Type: AWS::SQS::Queue
@@ -758,6 +760,8 @@ Resources:
   
   Py38x86SqsQueueDead: 
     Type: AWS::SQS::Queue
+    Properties:
+      QueueName: py-38-x86-sqs-queue-dead
 
   Py39ArmSqsQueue:
     Type: AWS::SQS::Queue
@@ -773,6 +777,8 @@ Resources:
   
   Py39ArmqsQueueDead: 
     Type: AWS::SQS::Queue
+    Properties:
+      QueueName: py-39-arm-sqs-queue-dead
 
   Py38ArmSqsQueue:
     Type: AWS::SQS::Queue
@@ -788,6 +794,8 @@ Resources:
   
   Py38ArmSqsQueueDead: 
     Type: AWS::SQS::Queue
+    Properties:
+      QueueName: py-38-arm-sqs-queue-dead
   
   # set up the lambda functions that relay api invocations to queue
   SendToQueue39x86:
@@ -1658,3 +1666,123 @@ Resources:
               - dynamodb:ConditionCheckItem
             Resource:
               - "*"
+
+### Errors tables
+  ErrorsTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: !Sub "easy-layers-dev-${AWS::Region}-error-layers"
+      AttributeDefinitions:
+        - AttributeName: "runtime"
+          AttributeType: "S"
+        - AttributeName: "machine"
+          AttributeType: "S"
+        - AttributeName: "library"
+          AttributeType: "S"
+        - AttributeName: "version"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "runtime"
+          KeyType: "HASH"
+        - AttributeName: "library"
+          KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  WriteErrorLayers:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri:
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
+        Key: functions/src/deployment_easy_layers.zip
+      Handler: write_errors.lambda_handler
+      Runtime: python3.9
+      FunctionName: write_error_layers_easy_layers
+      Description: Writes Errors From Creating Layers
+      Timeout: 10
+      Events:
+        SQSEvent1:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt Py39x86SqsQueueDead.Arn
+            BatchSize: 1
+        SQSEvent2:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt Py38x86SqsQueueDead.Arn
+            BatchSize: 1
+        SQSEvent3:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt Py39ArmSqsQueueDead.Arn
+            BatchSize: 1
+        SQSEvent4:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt Py38ArmSqsQueueDead.Arn
+            BatchSize: 1
+      Policies:
+        - Statement:
+            - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+              - sqs:ReceiveMessage
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+            Resource: "*"
+            - Sid: VisualEditor1
+              Effect: Allow
+              Action:
+                - dynamodb:PutItem
+              Resource:
+                - !GetAtt ErrorsTable.Arn 
+            - Sid: VisualEditor2
+              Effect: Allow
+              Action:
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: 
+                - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/get_error_layers_easy_layers:*"
+
+  GetErrorLayers:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri:
+        Bucket: !Sub "easy-layers-dev-${AWS::Region}"
+        Key: functions/src/deployment_easy_layers.zip
+      Handler: querry_errors.lambda_handler
+      Runtime: python3.9
+      FunctionName: get_error_layers_easy_layers
+      Description: Grabs all the layers
+      Timeout: 10
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ApiGatewayBackend
+            Path: /querry_errors
+            Method: get
+      Policies:
+        - Statement:
+            - Sid: VisualEditor1
+              Effect: Allow
+              Action:
+                - dynamodb:BatchGetItem
+                - dynamodb:GetRecords
+                - dynamodb:GetShardIterator
+                - dynamodb:Query
+                - dynamodb:GetItem
+                - dynamodb:Scan
+                - dynamodb:ConditionCheckItem
+              Resource:
+                - !GetAtt ErrorsTable.Arn 
+            - Sid: VisualEditor2
+              Effect: Allow
+              Action:
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: 
+                - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/get_error_layers_easy_layers:*"
