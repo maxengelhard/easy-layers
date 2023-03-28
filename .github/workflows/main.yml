@@ -126,11 +126,11 @@ jobs:
     - name: SAM Package
       run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-us-east-1/functions --output-template-file sam-packaged.yaml
     
-    # - name: SAM deploy us-east-1
-    #   run: sam deploy --template-file sam-packaged.yaml --stack-name DeployLambdaApis --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+    - name: SAM deploy us-east-1
+      run: sam deploy --template-file sam-packaged.yaml --stack-name DeployEasyLayers --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
     
     # - name: Stacksets
-    #   run: aws cloudformation update-stack-instances --stack-set-name DeployLambdaApis --accounts 360548816597 --regions us-east-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
+    #   run: aws cloudformation update-stack-instances --stack-set-name DeployEasyLayers --accounts 360548816597 --regions us-east-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
     # - name: Sam build us-east-1
     #   run:
     #     sam build --template sam-template.yaml      
