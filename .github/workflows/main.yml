@@ -117,14 +117,14 @@ jobs:
       run:
         aws s3 sync './backend/functions' s3://easy-layers-dev-af-south-1/functions --region af-south-1
     
-    #   - name: Setup AWS SAM CLI
-    #   uses: aws-actions/setup-sam@v2
+    - name: Setup AWS SAM CLI
+      uses: aws-actions/setup-sam@v2
       
-    # - name: SAM build us-east-1
-    #   run: sam build --template './backend/functions/template.yaml'
+    - name: SAM build us-east-1
+      run: sam build --template './backend/functions/template.yaml'
     
-    # - name: SAM Package
-    #   run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-us-east-1/functions --output-template-file sam-packaged.yaml
+    - name: SAM Package
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-us-east-1/functions --output-template-file sam-packaged.yaml
     
     # - name: SAM deploy us-east-1
     #   run: sam deploy --template-file sam-packaged.yaml --stack-name DeployLambdaApis --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
