@@ -121,7 +121,7 @@ jobs:
       uses: aws-actions/setup-sam@v2
       
     - name: SAM build us-east-1
-      run: sam build --template './backend/functions/template.yaml'
+      run: sam build --template './backend/functions/template.yml'
     
     - name: SAM Package
       run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-us-east-1/functions --output-template-file sam-packaged.yaml
