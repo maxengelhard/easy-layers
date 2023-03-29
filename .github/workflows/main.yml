@@ -137,7 +137,7 @@ jobs:
       run: sam build --template './backend/functions/template.yml'
     
     - name: SAM Package
-      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-us-east-1/functions --output-template-file sam-packaged.yaml
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-us-east-1 --output-template-file sam-packaged.yaml
     
     - name: SAM deploy us-east-1
       run: sam deploy --template-file sam-packaged.yaml --stack-name DeployEasyLayers --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
