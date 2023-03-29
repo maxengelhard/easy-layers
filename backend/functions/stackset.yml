@@ -1442,6 +1442,9 @@ Resources:
     Type: "AWS::CertificateManager::Certificate"
     Properties: 
       DomainName: !Sub "wss-${AWS::Region}.easylayers.dev"
+      DomainValidationOptions:
+            - DomainName: !Sub "wss-${AWS::Region}.easylayers.dev"
+              HostedZoneId: Z01613042LX65UZV97A4C
       ValidationMethod: DNS
 
   WebSocketDomainName:
