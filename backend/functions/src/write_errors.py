@@ -4,7 +4,7 @@ import json
 
 ddb = boto3.client('dynamodb')
 region = os.environ.get('AWS_REGION')
-table_name = f'easy-layers-dev-${region}-error-layers'
+table_name = f'easy-layers-dev-{region}-error-layers'
 
 def lambda_handler(event, context):
     print(event)
