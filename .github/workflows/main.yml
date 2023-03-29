@@ -19,8 +19,12 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18.x'
-    - name: Install Python 3.9
-      run: sudo apt-get install python3.9
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+        architecture: 'x64'
+        path: /usr/local/bin/python3.9
     # - name: Install Python 3.8
     #   run: sudo apt-get install python3.8
     - name: Install dependencies
