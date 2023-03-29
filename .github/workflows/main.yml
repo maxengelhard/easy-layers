@@ -21,8 +21,8 @@ jobs:
         node-version: '18.x'
     - name: Install Python 3.9
       run: sudo apt-get install python3.9
-    - name: Install Python 3.8
-      run: sudo apt-get install python3.8
+    # - name: Install Python 3.8
+    #   run: sudo apt-get install python3.8
     - name: Install dependencies
       run: npm install
     - name: Build folder
