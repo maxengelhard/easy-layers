@@ -4,8 +4,6 @@ version=0.1
  
  [default.deploy.parameters]
  stack_name = "DeployLambdaApis"
- s3_bucket = "easy-layers-dev-us-east-1"
- s3_prefix = "/functions"
  region = "us-east-1"
  confirm_changeset = false
  capabilities = "CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM"
