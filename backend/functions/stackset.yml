@@ -754,7 +754,8 @@ Resources:
   
   Py39x86SqsQueueDeadDead:
     Type: AWS::SQS::Queue
-    QueueName: py-39-x86-sqs-queue-dead-dead 
+    Properties:
+      QueueName: py-39-x86-sqs-queue-dead-dead 
 
   Py38x86SqsQueue:
     Type: AWS::SQS::Queue
@@ -781,7 +782,8 @@ Resources:
   
   Py38x86SqsQueueDeadDead:
     Type: AWS::SQS::Queue
-    QueueName: py-38-x86-sqs-queue-dead-dead 
+    Properties:
+      QueueName: py-38-x86-sqs-queue-dead-dead 
 
   Py39ArmSqsQueue:
     Type: AWS::SQS::Queue
@@ -808,7 +810,8 @@ Resources:
   
   Py39ArmSqsQueueDeadDead:
     Type: AWS::SQS::Queue
-    QueueName: py-39-arm-sqs-queue-dead-dead 
+    Properties:
+      QueueName: py-39-arm-sqs-queue-dead-dead 
 
   Py38ArmSqsQueue:
     Type: AWS::SQS::Queue
@@ -835,7 +838,8 @@ Resources:
   
   Py38ArmSqsQueueDeadDead:
     Type: AWS::SQS::Queue
-    QueueName: py-38-arm-sqs-queue-dead-dead 
+    Properties:
+      QueueName: py-38-arm-sqs-queue-dead-dead 
   
   # set up the lambda functions that relay api invocations to queue
   SendToQueue39x86:
