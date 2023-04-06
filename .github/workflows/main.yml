@@ -150,17 +150,184 @@ jobs:
     
     - name: SAM deploy us-east-2
       run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-us-east-2 --region us-east-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
-    
-    
-    # - name: Stacksets
-    #   run: aws cloudformation update-stack-instances --stack-set-name DeployEasyLayers --accounts 360548816597 --regions us-east-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
-    # - name: Sam build us-east-1
-    #   run:
-    #     sam build --template sam-template.yaml      
 
-    # - name: Deploy to AWS CloudFormation
-    #   run:
-    #     aws cloudformation deploy --template-file './backend/functions/template.yml' --stack-name DeployLambdasApis --no-fail-on-empty-changeset --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
-    # - name: Update Stacksets
-    #   run:
-    #     aws cloudformation update-stack-set --stack-set-name EasyLayersAcrossRegions --template-url https://easy-layers-dev-us-east-1.s3.amazonaws.com/functions/stackset.yml --region us-east-1 --accounts 360548816597 --regions us-east-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM
+    - name: SAM build ap-south-1
+      run: sam build --template './backend/functions/stackset.yml' --region ap-south-1
+    
+    - name: SAM Package ap-south-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-south-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-south-1
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-south-1 --region ap-south-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+     
+    - name: SAM build ap-southeast-1
+      run: sam build --template './backend/functions/stackset.yml' --region ap-southeast-1
+    
+    - name: SAM Package ap-southeast-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-southeast-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-southeast-1
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-southeast-1 --region ap-southeast-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+     
+    - name: SAM build ap-southeast-2
+      run: sam build --template './backend/functions/stackset.yml' --region ap-southeast-2
+    
+    - name: SAM Package ap-southeast-2
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-southeast-2 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-southeast-2
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-southeast-2 --region ap-southeast-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+     
+    - name: SAM build eu-west-2
+      run: sam build --template './backend/functions/stackset.yml' --region eu-west-2
+    
+    - name: SAM Package eu-west-2
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-eu-west-2 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy eu-west-2
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-eu-west-2 --region eu-west-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+     
+    - name: SAM build me-south-1
+      run: sam build --template './backend/functions/stackset.yml' --region me-south-1
+    
+    - name: SAM Package me-south-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-me-south-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy me-south-1
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-me-south-1 --region me-south-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+    - name: SAM build ap-east-1
+      run: sam build --template './backend/functions/stackset.yml' --region ap-east-1
+    
+    - name: SAM Package ap-east-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-east-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-east-1
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-east-1 --region ap-east-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+    - name: SAM build ap-northeast-1
+      run: sam build --template './backend/functions/stackset.yml' --region ap-northeast-1
+    
+    - name: SAM Package ap-northeast-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-northeast-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-northeast-1
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-northeast-1 --region ap-northeast-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+    - name: SAM build ap-northeast-2
+      run: sam build --template './backend/functions/stackset.yml' --region ap-northeast-2
+    
+    - name: SAM Package ap-northeast-2
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-northeast-2 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-northeast-2
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-northeast-2 --region ap-northeast-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build eu-north-1
+      run: sam build --template './backend/functions/stackset.yml' --region eu-north-1
+    
+    - name: SAM Package eu-north-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-eu-north-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy eu-north-1
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-eu-north-1 --region eu-north-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build eu-south-1
+      run: sam build --template './backend/functions/stackset.yml' --region eu-south-1
+    
+    - name: SAM Package eu-south-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-eu-south-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy eu-south-1
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-eu-south-1 --region eu-south-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build eu-west-3
+      run: sam build --template './backend/functions/stackset.yml' --region eu-west-3
+    
+    - name: SAM Package eu-west-3
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-eu-west-3 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy eu-west-3
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-eu-west-3 --region eu-west-3 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build us-west-2
+      run: sam build --template './backend/functions/stackset.yml' --region us-west-2
+    
+    - name: SAM Package us-west-2
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-us-west-2 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy us-west-2
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-us-west-2 --region us-west-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+    - name: SAM build af-south-1
+      run: sam build --template './backend/functions/stackset.yml' --region af-south-1
+    
+    - name: SAM Package af-south-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-af-south-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy af-south-1
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-af-south-1 --region af-south-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+    - name: SAM build ap-northeast-3
+      run: sam build --template './backend/functions/stackset.yml' --region ap-northeast-3
+    
+    - name: SAM Package ap-northeast-3
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-northeast-3 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-northeast-3
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-northeast-3 --region ap-northeast-3 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build ca-central-1
+      run: sam build --template './backend/functions/stackset.yml' --region ca-central-1
+    
+    - name: SAM Package ca-central-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ca-central-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ca-central-1
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ca-central-1 --region ca-central-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build eu-central-1
+      run: sam build --template './backend/functions/stackset.yml' --region eu-central-1
+    
+    - name: SAM Package eu-central-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-eu-central-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy eu-central-1
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-eu-central-1 --region eu-central-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build eu-west-1
+      run: sam build --template './backend/functions/stackset.yml' --region eu-west-1
+    
+    - name: SAM Package eu-west-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-eu-west-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy eu-west-1
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-eu-west-1 --region eu-west-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+
+    - name: SAM build sa-east-1
+      run: sam build --template './backend/functions/stackset.yml' --region sa-east-1
+    
+    - name: SAM Package sa-east-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-sa-east-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy sa-east-1
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-sa-east-1 --region sa-east-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+    - name: SAM build us-west-1
+      run: sam build --template './backend/functions/stackset.yml' --region us-west-1
+    
+    - name: SAM Package us-west-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-us-west-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy us-west-1
+      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-us-west-1 --region us-west-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
