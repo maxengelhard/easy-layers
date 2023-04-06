@@ -214,14 +214,14 @@ jobs:
     - name: SAM deploy ap-northeast-1
       run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-northeast-1 --region ap-northeast-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
 
-    - name: SAM build ap-northeast-2
-      run: sam build --template './backend/functions/stackset.yml' --region ap-northeast-2
+    # - name: SAM build ap-northeast-2
+    #   run: sam build --template './backend/functions/stackset.yml' --region ap-northeast-2
     
-    - name: SAM Package ap-northeast-2
-      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-northeast-2 --output-template-file sam-packaged-sets.yaml
+    # - name: SAM Package ap-northeast-2
+    #   run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-northeast-2 --output-template-file sam-packaged-sets.yaml
     
-    - name: SAM deploy ap-northeast-2
-      run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-northeast-2 --region ap-northeast-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+    # - name: SAM deploy ap-northeast-2
+    #   run: sam deploy --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-northeast-2 --region ap-northeast-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
 
 
     - name: SAM build eu-north-1
