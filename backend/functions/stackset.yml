@@ -1767,7 +1767,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: src/
-      Handler: querry_errors.lambda_handler
+      Handler: query_errors.lambda_handler
       Runtime: python3.9
       FunctionName: get_error_layers_easy_layers
       Description: Grabs all the layers
@@ -1778,7 +1778,7 @@ Resources:
           Properties:
             RestApiId:
               Ref: ApiGatewayBackend
-            Path: /querry_errors
+            Path: /query_errors
             Method: get
       Policies:
         - Statement:
