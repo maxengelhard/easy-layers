@@ -12,6 +12,9 @@ const Header = () => {
       <Link className='view' to="/layers">Existing Layers</Link>
       <Link className='view' to="/about">About</Link>
       <Link className='view' to="/errors">Unavailable Libraries</Link>
+      <a className='view' href="https://patreon.com/MaxEngelhard" target="_blank" rel="noopener noreferrer" style={{color: 'white'}}>
+      Sponsor This Project
+      </a>
     </nav>
 )
 }
