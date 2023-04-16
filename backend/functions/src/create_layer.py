@@ -57,7 +57,10 @@ def lambda_handler(event, context):
     
     print(result)
 
-    send_message_to_all_connections(result)
+    try:
+        send_message_to_all_connections(result)
+    except:
+        pass
     
     return result
 

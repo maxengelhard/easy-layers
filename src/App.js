@@ -1,6 +1,5 @@
 import React, {useState,useEffect} from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-//import StripeButton from './components/stripeButton';
 
 /*css */
 import './App.css';
@@ -10,6 +9,7 @@ import Header from './components/Header';
 // import Footer from './components/footer';
 import VerticalAd from './components/verticalAd';
 import PopupMessage from './components/popupMessage';
+// import StripeButton from './components/stripeButton';
 
 /* views */
 import Home from './views/Home';
@@ -24,6 +24,7 @@ import regionsJson from './components/regions'
 
 function App() {
   const [width, setWidth] = useState(window.innerWidth);
+  // const [openStripe, setOpenStripe] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);
@@ -73,7 +74,9 @@ function App() {
        <Router>
       <div className="sidebar">
         <Header />
-        {width>=600 ? <div><VerticalAd /> {/* <StripeButton /> */} </div> :null }
+        {width>=600 ? <div><VerticalAd /> 
+        {/* {openStripe ? <StripeButton open={openStripe} /> : <button onClick={() => setOpenStripe(!openStripe)} /> }  */}
+        </div> :null }
       </div>
       <div className="main-content">
         <Routes>
@@ -84,7 +87,7 @@ function App() {
         </Routes>
       </div>
       {width<600 ? <div><VerticalAd /> 
-      {/* <StripeButton /> */}
+      {/* {openStripe ? <StripeButton open={openStripe} /> : <button onClick={() => setOpenStripe(!openStripe)} /> }  */}
       </div> :null } 
       </Router>
       

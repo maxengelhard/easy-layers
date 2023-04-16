@@ -13,8 +13,6 @@ const ExistingErrors = () => {
   const regions = regionsJson['regions'].map((region) => region['attributes']['aws:region']).sort((a,b) => a > b ? 1: -1)
   const [selectedRegion, setselectedRegion] = useState('us-east-1');
   const [selectedlibrary, setselectedLibrary] = useState('All');
-  const [selectedRunTime, setselectedRuntime] = useState('All');
-  const [selectedArchitecture, setselectedArchitecture] = useState('All');
 
   
   
@@ -43,13 +41,6 @@ const ExistingErrors = () => {
     setselectedLibrary(newValue);
   }
 
-  const handleRuntimeChange = (newValue) => {
-    setselectedRuntime(newValue);
-  }
-
-  const handleArchitectureChange = (newValue) => {
-    setselectedArchitecture(newValue);
-  }
 
   return (
       <div>
@@ -67,13 +58,6 @@ const ExistingErrors = () => {
                           onValueChange={handleLibraryChange}/>
                           </th>
                         : <th className='library_filter'>Loading...</th> } 
-                        <th className='runtime_filter'>
-                          <DropdownMenu items={['Select all','python3.9','python3.8']} defaultValue={selectedRunTime} title={'Runtime'}
-                          onValueChange={handleRuntimeChange}/>
-                          </th>
-                        <th className='architecture_filter'><DropdownMenu items={['Select all','x86_64','arm64']} defaultValue={selectedArchitecture} title={'Architecture'}
-                        onValueChange={handleArchitectureChange}/>
-                        </th>
                       </tr>
                     </thead>
         </table>
@@ -93,19 +77,13 @@ const ExistingErrors = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {layers
-                      .filter((layer) => (layer.runtime ===selectedRunTime || selectedRunTime==='All'))
-                      .filter((layer) => (layer.machine  === selectedArchitecture || selectedArchitecture==='All' ))
-                      .map((layer,j) => {
-                        return (
-                          <tr key={j}>
+                          <tr key={i+1}>
                             <td className='layer_version'>{layer.version}</td>
                             {/* <td className='layer_created_date'>{version_data.LatestMatchingVersion.CreatedDate.substring(0,10)}</td>  */}
                             <td className='layer_runtimes'>{layer.runtime}</td>
                             <td className='layer_architectures'>{layer.machine}</td>
                           </tr>
-                        )
-                      })}
+                      
                     </tbody>
                   </table>
               </div>
