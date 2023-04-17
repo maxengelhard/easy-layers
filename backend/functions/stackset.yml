@@ -897,6 +897,7 @@ Resources:
             Effect: Allow
             Action:
               - sqs:SendMessage
+              - sqs:ReceiveMessage
             Resource:
               - "*"
           - Sid: VisualEditor4
@@ -965,6 +966,7 @@ Resources:
             Effect: Allow
             Action:
               - sqs:SendMessage
+              - sqs:ReceiveMessage
             Resource:
               - "*"
           - Sid: VisualEditor4
@@ -1032,6 +1034,7 @@ Resources:
             Effect: Allow
             Action:
               - sqs:SendMessage
+              - sqs:ReceiveMessage
             Resource:
               - "*"
           - Sid: VisualEditor4
@@ -1099,6 +1102,7 @@ Resources:
             Effect: Allow
             Action:
               - sqs:SendMessage
+              - sqs:ReceiveMessage
             Resource:
               - "*"
           - Sid: VisualEditor4
