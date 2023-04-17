@@ -76,6 +76,20 @@ def lambda_handler(event, context):
 
     if 'Item' in errors and 'library' in errors['Item']:
         return {"error" : library}
+    
+    # check to see if it's currently in the sqs queue
+    # Retrieve messages from the queue
+    response = sqs.receive_message(
+        QueueUrl=queue_url,
+        MaxNumberOfMessages=10
+    )
+
+    # Process the messages
+    messages = response.get('Messages', [])
+    for message in messages:
+        body = message['Body']
+        if body['body']['library'] == library and body['body'].get('version') == library_version:
+            return 'Message sent successfully'
 
     message = event
     message['max_version'] = max_version
