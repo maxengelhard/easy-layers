@@ -1,0 +1,332 @@
+name: Upload functions
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read  # This is required for actions/checkout
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@main
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+        architecture: 'x64'
+        path: /usr/local/bin/python3.8
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+        architecture: 'x64'
+        path: /usr/local/bin/python3.9
+
+    - name: Install dependencies
+      run: npm install
+    - name: Build folder
+      run: npm run build
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: us-east-1
+        role-to-assume: ${{ secrets.OPENID }}
+        role-session-name: MySessionName
+    - name: zip backend files
+      run: zip -r -j ./backend/functions/src/deployment_easy_layers.zip ./backend/functions/src/*
+    - name: Copy files to frontend site
+      run:
+        aws s3 sync './build' ${{ secrets.FRONT_END_BUCKET }}
+    # - name: Copy files to the s3 backend bucket us-east-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-1/functions
+    # - name: Copy files to the s3 backend bucket us-east-2
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-us-east-2/functions
+    # - name: Copy files to the s3 backend bucket us-west-2
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-us-west-2/functions
+    # - name: Copy files to the s3 backend bucket us-west-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-us-west-1/functions
+    # - name: Copy files to the s3 backend bucket sa-east-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-sa-east-1/functions
+    # - name: Copy files to the s3 backend bucket me-south-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-me-south-1/functions --region me-south-1 
+    # - name: Copy files to the s3 backend bucket me-central-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-me-central-1/functions --region me-central-1 
+    # - name: Copy files to the s3 backend bucket eu-west-3
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-eu-west-3/functions
+    # - name: Copy files to the s3 backend bucket eu-west-2
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-eu-west-2/functions        
+    # - name: Copy files to the s3 backend bucket eu-west-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-eu-west-1/functions
+    # - name: Copy files to the s3 backend bucket eu-south-2
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-eu-south-2/functions --region eu-south-2 
+    # - name: Copy files to the s3 backend bucket eu-south-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-eu-south-1/functions --region eu-south-1 
+    # - name: Copy files to the s3 backend bucket eu-north-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-eu-north-1/functions
+    # - name: Copy files to the s3 backend bucket eu-central-2
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-eu-central-2/functions --region eu-central-2 
+    # - name: Copy files to the s3 backend bucket eu-central-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-eu-central-1/functions
+    # - name: Copy files to the s3 backend bucket ca-central-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-ca-central-1/functions
+    # - name: Copy files to the s3 backend bucket ap-southeast-4
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-4/functions --region ap-southeast-4 
+    # - name: Copy files to the s3 backend bucket ap-southeast-3
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-3/functions --region ap-southeast-3 
+    # - name: Copy files to the s3 backend bucket ap-southeast-2
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-2/functions
+    # - name: Copy files to the s3 backend bucket ap-southeast-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-ap-southeast-1/functions
+    # - name: Copy files to the s3 backend bucket ap-south-2
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-ap-south-2/functions --region ap-south-2         
+    # - name: Copy files to the s3 backend bucket ap-south-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-ap-south-1/functions
+    # - name: Copy files to the s3 backend bucket ap-northeast-3
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-ap-northeast-3/functions
+    # - name: Copy files to the s3 backend bucket ap-northeast-2
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-ap-northeast-2/functions
+    # - name: Copy files to the s3 backend bucket ap-northeast-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-ap-northeast-1/functions
+    # - name: Copy files to the s3 backend bucket ap-east-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-ap-east-1/functions --region ap-east-1 
+    # - name: Copy files to the s3 backend bucket af-south-1
+    #   run:
+    #     aws s3 sync './backend/functions' s3://easy-layers-dev-af-south-1/functions --region af-south-1
+    
+    - name: Setup AWS SAM CLI
+      uses: aws-actions/setup-sam@v2
+      
+    - name: SAM build us-east-1
+      run: sam build --template './backend/functions/template.yml'
+    
+    - name: SAM Package
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-us-east-1 --output-template-file sam-packaged.yaml
+    
+    - name: SAM deploy us-east-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged.yaml --s3-bucket easy-layers-dev-us-east-1 --region us-east-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+    
+    - name: SAM build us-east-2
+      run: sam build --template './backend/functions/stackset.yml' --region us-east-2
+    
+    - name: SAM Package us-east-2
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-us-east-2 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy us-east-2
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-us-east-2 --region us-east-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+    - name: SAM build ap-south-1
+      run: sam build --template './backend/functions/stackset.yml' --region ap-south-1
+    
+    - name: SAM Package ap-south-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-south-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-south-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-south-1 --region ap-south-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+     
+    - name: SAM build ap-southeast-1
+      run: sam build --template './backend/functions/stackset.yml' --region ap-southeast-1
+    
+    - name: SAM Package ap-southeast-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-southeast-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-southeast-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-southeast-1 --region ap-southeast-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+     
+    - name: SAM build ap-southeast-2
+      run: sam build --template './backend/functions/stackset.yml' --region ap-southeast-2
+    
+    - name: SAM Package ap-southeast-2
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-southeast-2 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-southeast-2
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-southeast-2 --region ap-southeast-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+     
+    - name: SAM build eu-west-2
+      run: sam build --template './backend/functions/stackset.yml' --region eu-west-2
+    
+    - name: SAM Package eu-west-2
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-eu-west-2 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy eu-west-2
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-eu-west-2 --region eu-west-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+     
+    - name: SAM build me-south-1
+      run: sam build --template './backend/functions/stackset.yml' --region me-south-1
+    
+    - name: SAM Package me-south-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-me-south-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy me-south-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-me-south-1 --region me-south-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+    - name: SAM build ap-east-1
+      run: sam build --template './backend/functions/stackset.yml' --region ap-east-1
+    
+    - name: SAM Package ap-east-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-east-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-east-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-east-1 --region ap-east-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+    - name: SAM build ap-northeast-1
+      run: sam build --template './backend/functions/stackset.yml' --region ap-northeast-1
+    
+    - name: SAM Package ap-northeast-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-northeast-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-northeast-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-northeast-1 --region ap-northeast-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+    - name: SAM build ap-northeast-2
+      run: sam build --template './backend/functions/stackset.yml' --region ap-northeast-2
+    
+    - name: SAM Package ap-northeast-2
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-northeast-2 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-northeast-2
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-northeast-2 --region ap-northeast-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build eu-north-1
+      run: sam build --template './backend/functions/stackset.yml' --region eu-north-1
+    
+    - name: SAM Package eu-north-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-eu-north-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy eu-north-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-eu-north-1 --region eu-north-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build eu-south-1
+      run: sam build --template './backend/functions/stackset.yml' --region eu-south-1
+    
+    - name: SAM Package eu-south-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-eu-south-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy eu-south-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-eu-south-1 --region eu-south-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build eu-west-3
+      run: sam build --template './backend/functions/stackset.yml' --region eu-west-3
+    
+    - name: SAM Package eu-west-3
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-eu-west-3 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy eu-west-3
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-eu-west-3 --region eu-west-3 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build us-west-2
+      run: sam build --template './backend/functions/stackset.yml' --region us-west-2
+    
+    - name: SAM Package us-west-2
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-us-west-2 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy us-west-2
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-us-west-2 --region us-west-2 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+    - name: SAM build af-south-1
+      run: sam build --template './backend/functions/stackset.yml' --region af-south-1
+    
+    - name: SAM Package af-south-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-af-south-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy af-south-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-af-south-1 --region af-south-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+    - name: SAM build ap-northeast-3
+      run: sam build --template './backend/functions/stackset.yml' --region ap-northeast-3
+    
+    - name: SAM Package ap-northeast-3
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ap-northeast-3 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ap-northeast-3
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ap-northeast-3 --region ap-northeast-3 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build ca-central-1
+      run: sam build --template './backend/functions/stackset.yml' --region ca-central-1
+    
+    - name: SAM Package ca-central-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-ca-central-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy ca-central-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-ca-central-1 --region ca-central-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build eu-central-1
+      run: sam build --template './backend/functions/stackset.yml' --region eu-central-1
+    
+    - name: SAM Package eu-central-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-eu-central-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy eu-central-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-eu-central-1 --region eu-central-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+    - name: SAM build eu-west-1
+      run: sam build --template './backend/functions/stackset.yml' --region eu-west-1
+    
+    - name: SAM Package eu-west-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-eu-west-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy eu-west-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-eu-west-1 --region eu-west-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+
+
+    - name: SAM build sa-east-1
+      run: sam build --template './backend/functions/stackset.yml' --region sa-east-1
+    
+    - name: SAM Package sa-east-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-sa-east-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy sa-east-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-sa-east-1 --region sa-east-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+
+    - name: SAM build us-west-1
+      run: sam build --template './backend/functions/stackset.yml' --region us-west-1
+    
+    - name: SAM Package us-west-1
+      run: sam package --template-file .aws-sam/build/template.yaml --s3-bucket easy-layers-dev-us-west-1 --output-template-file sam-packaged-sets.yaml
+    
+    - name: SAM deploy us-west-1
+      run: sam deploy --parameter-overrides "STRIPEAPIKEY=${{ secrets.STRIPE_API_KEY }}" "HOSTEDZONEID=${{ secrets.HOSTEDZONEID }}" "CERTIFICATEARN=${{ secrets.CERTIFICATEARN}}" --template-file sam-packaged-sets.yaml --s3-bucket easy-layers-dev-us-west-1 --region us-west-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset
+

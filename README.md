@@ -1,70 +1,30 @@
-# Getting Started with Create React App
+# Easy Layers
+Easy Layers is a public website that allows people to create Lambda Layers with Python packages, just like pip install. With Easy Layers, you create layers that keep your Lambda functions smaller and easier to manage by externalizing dependencies that can be shared across multiple functions.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Getting Started
+To use Lambda Layers Creator, simply navigate to the website in your browser at https://easylayers.dev/
 
-## Available Scripts
+# Creating a Lambda Layer
+To create a Lambda Layer, follow these steps:
 
-In the project directory, you can run:
+1. Enter the AWS Region, Python version, and architecture you want.
+2. Enter the name of the Python package you want to include in your layer (e.g. requests, pandas, numpy, etc.).
+3. Enter the version of the Python package (optional).
+4. Click the "Submit" button to create a layer.
 
-### `npm start`
+# After creating
+If a previous layer was created you will see the ARN popup on your screen. You can copy and paste this into any lambda with the appropriate region.
+If there is not an existing layer, it will be sent to a queue for processing. Layers can take up to 5 minutes to create. Please be patient for your layer to be created. Once it is created you will see a pop up message apprear on your screen with the layers arn. You can copy and paste that. It will also be on the https://easylayers.dev/layers don't worry if you don't get the message!
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# How it Works
+The source code on creating a layer is easy-layers/backend/functions/src/create_layer.py
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Easy Layers uses the python subproces and pip package manager to install Python packages and create the Layer in AWS. When you add a package to your Layer, the website runs pip install <package-name> -t <temp-dir> in a lambda (no issues with architectures) to install the package and its dependencies in a temporary directory. Then, it zips the contents of the directory, publishes it to s3, and creates a layer in AWS.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Limitations
+Lambda Layers Creator has the following limitations: 
+1. There are libraries that throw errors with this lambda. We working on updates to try and allow for more layers.
+2. It only supports Python packages that are available in the official Python Package Index (PyPI).
+3. It only supports Python 3.8 , 3.9 (for now).
+4. It does not support additional dependencies that are not installed through pip (e.g. system-level dependencies).
+5. We are dependent on AWS. If lambda / s3 is down we will be too.

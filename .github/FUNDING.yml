@@ -1,0 +1,17 @@
+# These are supported funding model platforms
+
+github: maxengelhard
+patreon: MaxEngelhard
+
+# Define your sponsor tiers
+tiers:
+  - name: Tier 1 Sponsor
+    description: Your name on the README.
+    monthly_price: 10
+  - name: Tier 2 Sponsor
+    description: Your name on our website.
+    monthly_price: 50
+  - name: Corporate Sponsor
+    description: Your logo on our website and in our README.
+    monthly_price: 250
+
