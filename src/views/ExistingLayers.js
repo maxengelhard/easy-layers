@@ -83,7 +83,7 @@ const ExistingLayers = () => {
                           </th>
                         : <th className='library_filter'>Loading...</th> } 
                         <th className='runtime_filter'>
-                          <DropdownMenu items={['Select all','python3.9','python3.8']} defaultValue={selectedRunTime} title={'Runtime'}
+                          <DropdownMenu items={['Select all','python3.10','python3.9','python3.8']} defaultValue={selectedRunTime} title={'Runtime'}
                           onValueChange={handleRuntimeChange}/>
                           </th>
                         <th className='architecture_filter'><DropdownMenu items={['Select all','x86_64','arm64']} defaultValue={selectedArchitecture} title={'Architecture'}

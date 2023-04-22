@@ -25,7 +25,7 @@ const InstallBar = ({ onResult, selectedRunTime, selectedArchitecture, selectedR
     }
 
     const createLayer = async (layer,version) => {
-        const endpoint = `create_layer${selectedRunTime==='python3.9' ? '39' : '38'}${selectedArchitecture==='x86_64' ? 'x86': 'arm'}`
+        const endpoint = `create_layer${selectedRunTime==='python3.10' ? '310' : selectedRunTime==='python3.9' ? '39' : '38'}${selectedArchitecture==='x86_64' ? 'x86': 'arm'}`
         const api_gateway = `https://api-${selectedRegion}.easylayers.dev/${endpoint}`
         
         onResult('loading')

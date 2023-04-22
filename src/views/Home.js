@@ -12,7 +12,7 @@ const Home = () => {
     /* filters */
     const regions = regionsJson['regions'].map((region) => region['attributes']['aws:region']).sort((a,b) => a > b ? 1: -1)
     const [selectedRegion, setselectedRegion] = useState('us-east-1');
-    const [selectedRunTime, setselectedRuntime] = useState('python3.9');
+    const [selectedRunTime, setselectedRuntime] = useState('python3.10');
     const [selectedArchitecture, setselectedArchitecture] = useState('x86_64');
     const [result, setResult] = useState(false);
     
@@ -83,7 +83,7 @@ const Home = () => {
                           onValueChange={handleRegionChange}/>
                           </th>
                         <th className='runtime_filter'>
-                          <DropdownMenu items={['python3.9','python3.8']} defaultValue={selectedRunTime} title={'Runtime'}
+                          <DropdownMenu items={['python3.10','python3.9','python3.8']} defaultValue={selectedRunTime} title={'Runtime'}
                           onValueChange={handleRuntimeChange}/>
                           </th>
                         <th className='architecture_filter'><DropdownMenu items={['x86_64','arm64']} defaultValue={selectedArchitecture} title={'Architecture'}

@@ -9,7 +9,7 @@ const About = () => {
         This allows you to use famous libraries like requests, Django, BS4, etc.. 
         When you create a layer, you specify the package, region and optionally you can pick the version of the dependency that you want to include. We take 
         care of making the Layer and will give you the ARN. All you have to do is attach it to your lambda and AWS will make sure that the package is available to your function at runtime.
-        As of now we have python 3.8,3.9 and in all available regions.
+        As of now we have python 3.10,3.9,3.8 in the listed available regions.
         </p>
       </div>
     );
