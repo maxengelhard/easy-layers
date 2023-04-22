@@ -157,6 +157,285 @@ Resources:
 
 
   # create all the needed layers
+  CreateNeededLayer310arm:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: !Sub |
+          import json
+          import sys 
+          import os
+          import shutil
+          import boto3
+          from subprocess import run,CalledProcessError
+          import urllib.request
+          from zipfile import ZipFile
+          import platform
+          import cfnresponse
+
+          try:
+              from packaging.version import parse
+          except ImportError:
+              from pip._vendor.packaging.version import parse
+              
+          S3 = boto3.resource('s3')
+          Bucket = S3.Bucket('easy-layers-dev-${AWS::Region}')
+          Lambda = boto3.client('lambda')
+
+          def lambda_handler(event, context):
+              # Test Access permision to S3
+              try:
+                  Bucket.objects.limit(count=1)
+              except Exception:
+                  return "This function has no access to this bucker or its not exists, please validate"
+              # Test access to lambda resources
+              try:
+                  Lambda.list_functions()
+              except Exception:
+                  return "This function has no access to Lambda resources, please validate"
+              # Create a new layer
+              result = {} 
+              for library in ['jsonschema','requests','stripe']:
+                  new_library_arn = create_new(library , Bucket, Lambda)
+                  result[library] = new_library_arn
+                  print(new_library_arn)
+              
+              cfnresponse.send(event, context, cfnresponse.SUCCESS, result)
+              return result
+
+          def create_new(library, Bucket, Lambda):
+              # Extract parameters from API
+              library_version = None
+
+              machine = 'arm64' if platform.machine() == 'aarch64' else platform.machine()
+              run_time = 'python' + '.'.join(sys.version.split(' ')[0].split('.')[0:2])
+              run_time_dash = 'py' + ''.join(sys.version.split(' ')[0].split('.')[0:2]) 
+
+              
+              # get the library name and if it has versions make it like such requests==2.28.1
+              library_install = library if library_version is None else library + "==" + library_version
+              # Check if the package  exists 
+              max_version = 'x'
+              max_version_and_lib = library + "==" + str(max_version)
+
+              # make the layer name readable and consistent of an ARN and for S3
+              library_and_version=None
+              if library_version is None:
+                  library_and_version=max_version_and_lib.replace('==','-')
+              else:
+                  library_and_version=library_install.replace('==','-')
+              
+              layer_name =  (library_and_version + '-' + run_time_dash + '-' + machine[0:3]).replace('.','-')
+
+              # # Then check if Layer exists in the account already
+              layer_exists = check_if_layer_exists(layer_name)
+              # if layer exists return the Layer ARN
+              if layer_exists:
+                  return layer_exists
+              # if layer doesn't exist the run the process of making a new layer
+              # Make sure the dir is empty
+              run(["rm" , "-rf", "/tmp/*"])
+              # Prepare the dir 
+              run(["mkdir" ,"/tmp/python" ])
+              # Install the new libraries
+              outcome = run(["python" , "-m" , "pip" , "install" , library_install  , "-t", "/tmp/python"], check=False, capture_output=True,text=True)
+              # print logs
+              print(f"returncode = {outcome.returncode}")
+              print(f"output: \n {outcome.stdout}")
+              
+              # Calculate layer limit
+              dir_size = run(["du" , "-sh", "/tmp/python"], capture_output=True, text=True)
+              dir_size = dir_size.stdout.split()[0]
+              dir_size = dir_size.split("M")[0]
+              dir_size = dir_size if len(dir_size.split("K"))<2 else float(dir_size.split("K")[0])/1000
+              
+              if int(float(dir_size)) >= 250:
+                  raise ValueError( "Couldn't run. Layer size is over limit.") 
+
+              # Zip the installed libraries
+              zip_directory("/tmp/python/" , "/tmp/python.zip")
+
+              # Upload the library into S3
+              try:
+                  Bucket.upload_file("/tmp/python.zip", "layers_repository/" + layer_name + ".zip")
+              except Exception as e:
+                  raise e
+              # Create a new layer
+              try:
+                  new_layer = Lambda.publish_layer_version(LayerName= layer_name,
+                                                              Content= {
+                                                                  'S3Bucket': 'easy-layers-dev-${AWS::Region}',
+                                                                  'S3Key':  "layers_repository/" + layer_name + ".zip"},
+                                                              CompatibleRuntimes=[run_time],
+                                                              CompatibleArchitectures=[machine])
+              except Exception as e:
+                  raise e
+              # Return layer version ARN
+              return new_layer["LayerVersionArn"]
+
+          def check_if_layer_exists(layer_name):
+              try:
+                  list_layer_version = Lambda.list_layer_versions(LayerName=layer_name)["LayerVersions"][0]["LayerVersionArn"]
+                  return list_layer_version
+              except Exception:
+                  pass
+              
+          def zip_directory(folder_path, zip_path):
+              with ZipFile(zip_path, mode='w') as zipf:
+                  len_dir_path = len(folder_path)
+                  for root, _, files in os.walk(folder_path):
+                      for file in files:
+                          file_path = os.path.join(root, file)
+                          zipf.write(file_path, 'python/'+file_path[len_dir_path:])
+      FunctionName: create_needed_layers_310arm
+      Handler: index.lambda_handler
+      Runtime: python3.10
+      Architectures: 
+        - arm64
+      Description: Creates Needed Layers For Python 3.10 ARM
+      Timeout: 300
+      Role: !GetAtt NeededLayersLambdaRole.Arn
+
+  CreateNeededLayer310x86:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: !Sub |
+          import json
+          import sys 
+          import os
+          import shutil
+          import boto3
+          from subprocess import run,CalledProcessError
+          import urllib.request
+          from zipfile import ZipFile
+          import platform
+          import cfnresponse
+
+          try:
+              from packaging.version import parse
+          except ImportError:
+              from pip._vendor.packaging.version import parse
+              
+          S3 = boto3.resource('s3')
+          Bucket = S3.Bucket('easy-layers-dev-${AWS::Region}')
+          Lambda = boto3.client('lambda')
+
+          def lambda_handler(event, context):
+              # Test Access permision to S3
+              try:
+                  Bucket.objects.limit(count=1)
+              except Exception:
+                  return "This function has no access to this bucker or its not exists, please validate"
+              # Test access to lambda resources
+              try:
+                  Lambda.list_functions()
+              except Exception:
+                  return "This function has no access to Lambda resources, please validate"
+              # Create a new layer
+              result = {} 
+              for library in ['jsonschema','requests','stripe']:
+                  new_library_arn = create_new(library , Bucket, Lambda)
+                  result[library] = new_library_arn
+                  print(new_library_arn)
+              
+              cfnresponse.send(event, context, cfnresponse.SUCCESS, result)
+              return result
+
+          def create_new(library, Bucket, Lambda):
+              # Extract parameters from API
+              library_version = None
+
+              machine = 'arm64' if platform.machine() == 'aarch64' else platform.machine()
+              run_time = 'python' + '.'.join(sys.version.split(' ')[0].split('.')[0:2])
+              run_time_dash = 'py' + ''.join(sys.version.split(' ')[0].split('.')[0:2]) 
+
+              
+              # get the library name and if it has versions make it like such requests==2.28.1
+              library_install = library if library_version is None else library + "==" + library_version
+              # Check if the package  exists 
+              max_version = 'x'
+              max_version_and_lib = library + "==" + str(max_version)
+
+              # make the layer name readable and consistent of an ARN and for S3
+              library_and_version=None
+              if library_version is None:
+                  library_and_version=max_version_and_lib.replace('==','-')
+              else:
+                  library_and_version=library_install.replace('==','-')
+              
+              layer_name =  (library_and_version + '-' + run_time_dash + '-' + machine[0:3]).replace('.','-')
+
+              # # Then check if Layer exists in the account already
+              layer_exists = check_if_layer_exists(layer_name)
+              # if layer exists return the Layer ARN
+              if layer_exists:
+                  return layer_exists
+              # if layer doesn't exist the run the process of making a new layer
+              # Make sure the dir is empty
+              run(["rm" , "-rf", "/tmp/*"])
+              # Prepare the dir 
+              run(["mkdir" ,"/tmp/python" ])
+              # Install the new libraries
+              outcome = run(["python" , "-m" , "pip" , "install" , library_install  , "-t", "/tmp/python"], check=False, capture_output=True,text=True)
+              # print logs
+              print(f"returncode = {outcome.returncode}")
+              print(f"output: \n {outcome.stdout}")
+              
+              # Calculate layer limit
+              dir_size = run(["du" , "-sh", "/tmp/python"], capture_output=True, text=True)
+              dir_size = dir_size.stdout.split()[0]
+              dir_size = dir_size.split("M")[0]
+              dir_size = dir_size if len(dir_size.split("K"))<2 else float(dir_size.split("K")[0])/1000
+              
+              if int(float(dir_size)) >= 250:
+                  raise ValueError( "Couldn't run. Layer size is over limit.") 
+
+              # Zip the installed libraries
+              zip_directory("/tmp/python/" , "/tmp/python.zip")
+
+              # Upload the library into S3
+              try:
+                  Bucket.upload_file("/tmp/python.zip", "layers_repository/" + layer_name + ".zip")
+              except Exception as e:
+                  raise e
+              # Create a new layer
+              try:
+                  new_layer = Lambda.publish_layer_version(LayerName= layer_name,
+                                                              Content= {
+                                                                  'S3Bucket': 'easy-layers-dev-${AWS::Region}',
+                                                                  'S3Key':  "layers_repository/" + layer_name + ".zip"},
+                                                              CompatibleRuntimes=[run_time],
+                                                              CompatibleArchitectures=[machine])
+              except Exception as e:
+                  raise e
+              # Return layer version ARN
+              return new_layer["LayerVersionArn"]
+
+          def check_if_layer_exists(layer_name):
+              try:
+                  list_layer_version = Lambda.list_layer_versions(LayerName=layer_name)["LayerVersions"][0]["LayerVersionArn"]
+                  return list_layer_version
+              except Exception:
+                  pass
+              
+          def zip_directory(folder_path, zip_path):
+              with ZipFile(zip_path, mode='w') as zipf:
+                  len_dir_path = len(folder_path)
+                  for root, _, files in os.walk(folder_path):
+                      for file in files:
+                          file_path = os.path.join(root, file)
+                          zipf.write(file_path, 'python/'+file_path[len_dir_path:])
+      FunctionName: create_needed_layers_310x86
+      Handler: index.lambda_handler
+      Runtime: python3.10
+      Architectures: 
+        - x86_64
+      Description: Creates Needed Layers For Python 3.10 x86
+      Timeout: 300
+      Role: !GetAtt NeededLayersLambdaRole.Arn
+  
+  # create all the needed layers
   CreateNeededLayer39arm:
     Type: AWS::Lambda::Function
     Properties:
@@ -612,7 +891,7 @@ Resources:
                   return "This function has no access to Lambda resources, please validate"
               # Create a new layer
               result = {} 
-              for library in ['jsonschema','requests','stripe']:
+              for library in ['jsonschema','requests', 'stripe']:
                   new_library_arn = create_new(library , Bucket, Lambda)
                   result[library] = new_library_arn
                   print(new_library_arn)
@@ -713,7 +992,18 @@ Resources:
       Timeout: 300
       Role: !GetAtt NeededLayersLambdaRole.Arn
 
+  TriggerNeededLayersV2310arm:
+    Type: AWS::CloudFormation::CustomResource
+    DependsOn: CreateNeededLayer39arm
+    Properties:
+      ServiceToken: !GetAtt CreateNeededLayer310arm.Arn
 
+  TriggerNeededLayersV2310x86:
+    Type: AWS::CloudFormation::CustomResource
+    DependsOn: CreateNeededLayer310x86
+    Properties:
+      ServiceToken: !GetAtt CreateNeededLayer310x86.Arn
+      
   TriggerNeededLayersV239arm:
     Type: AWS::CloudFormation::CustomResource
     DependsOn: CreateNeededLayer39arm
@@ -739,12 +1029,70 @@ Resources:
       ServiceToken: !GetAtt CreateNeededLayer38x86.Arn
 
   # set up queues for processing functions
+  Py310x86SqsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: py-310-x86-sqs-queue
+      VisibilityTimeout: 310
+      ReceiveMessageWaitTimeSeconds: 20
+      RedrivePolicy: 
+        deadLetterTargetArn: 
+          Fn::GetAtt: 
+            - "Py310x86SqsQueueDead"
+            - "Arn"
+        maxReceiveCount: 2
+  
+  Py310x86SqsQueueDead: 
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: py-310-x86-sqs-queue-dead
+      RedrivePolicy: 
+        deadLetterTargetArn: 
+          Fn::GetAtt: 
+            - "Py310x86SqsQueueDeadDead"
+            - "Arn"
+        maxReceiveCount: 1
+  
+  Py310x86SqsQueueDeadDead:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: py-310-x86-sqs-queue-dead-dead
+   
+  Py310ArmSqsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: py-310-arm-sqs-queue
+      VisibilityTimeout: 310
+      ReceiveMessageWaitTimeSeconds: 20
+      RedrivePolicy: 
+        deadLetterTargetArn: 
+          Fn::GetAtt: 
+            - "Py310ArmSqsQueueDead"
+            - "Arn"
+        maxReceiveCount: 2
+  
+  Py310ArmSqsQueueDead: 
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: py-310-arm-sqs-queue-dead
+      RedrivePolicy: 
+        deadLetterTargetArn: 
+          Fn::GetAtt: 
+            - "Py310ArmSqsQueueDeadDead"
+            - "Arn"
+        maxReceiveCount: 1
+  
+  Py310ArmSqsQueueDeadDead:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: py-310-arm-sqs-queue-dead-dead
+      
   Py39x86SqsQueue:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: py-39-x86-sqs-queue
       VisibilityTimeout: 310
-      ReceiveMessageWaitTimeSeconds: 10
+      ReceiveMessageWaitTimeSeconds: 20
       RedrivePolicy: 
         deadLetterTargetArn: 
           Fn::GetAtt: 
@@ -773,7 +1121,7 @@ Resources:
     Properties:
       QueueName: py-38-x86-sqs-queue
       VisibilityTimeout: 310
-      ReceiveMessageWaitTimeSeconds: 10
+      ReceiveMessageWaitTimeSeconds: 20
       RedrivePolicy: 
         deadLetterTargetArn: 
           Fn::GetAtt: 
@@ -802,7 +1150,7 @@ Resources:
     Properties:
       QueueName: py-39-arm-sqs-queue
       VisibilityTimeout: 310
-      ReceiveMessageWaitTimeSeconds: 10
+      ReceiveMessageWaitTimeSeconds: 20
       RedrivePolicy: 
         deadLetterTargetArn: 
           Fn::GetAtt: 
@@ -831,7 +1179,7 @@ Resources:
     Properties:
       QueueName: py-38-arm-sqs-queue
       VisibilityTimeout: 310
-      ReceiveMessageWaitTimeSeconds: 10
+      ReceiveMessageWaitTimeSeconds: 20
       RedrivePolicy: 
         deadLetterTargetArn: 
           Fn::GetAtt: 
@@ -854,8 +1202,76 @@ Resources:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: py-38-arm-sqs-queue-dead-dead 
-  
+
   # set up the lambda functions that relay api invocations to queue
+  SendToQueue310x86:
+    Type: AWS::Serverless::Function
+    DependsOn: TriggerNeededLayersV2310x86
+    Properties:
+      CodeUri: src/
+      FunctionName: send_to_queue_310x86
+      Handler: send_to_queue.lambda_handler
+      Runtime: python3.10
+      Architectures: 
+        - x86_64
+      Description: Checks If A Layer Exists When Someone Submits Python 3.10 x86 And Sends To Queue
+      Timeout: 10
+      Environment:
+        Variables:
+          WEBSOCKET_CONNECTIONS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-websocket-connections"
+          ERROR_LAYERS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-error-layers"
+          S3_BUCKET: !Sub "easy-layers-dev-${AWS::Region}"
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ApiGatewayBackend
+            Path: /create_layer310x86
+            Method: post
+      Layers:
+        - !GetAtt TriggerNeededLayersV2310x86.jsonschema
+        - !GetAtt TriggerNeededLayersV2310x86.requests
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+              - sqs:ReceiveMessage
+            Resource:
+              - "*"
+          - Sid: VisualEditor4
+            Effect: Allow
+            Action:
+              - lambda:ListFunctions
+              - lambda:ListLayerVersions
+              - lambda:ListLayers
+              - lambda:GetLayerVersion
+            Resource: "*"
+          - Sid: VisualEditor5
+            Effect: Allow
+            Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:ConditionCheckItem
+            Resource: "*"
+            
   SendToQueue39x86:
     Type: AWS::Serverless::Function
     DependsOn: TriggerNeededLayersV239x86
@@ -923,7 +1339,6 @@ Resources:
               - dynamodb:Scan
               - dynamodb:ConditionCheckItem
             Resource: "*"
-
   # define the Lambda function and its code
   SendToQueue38x86:
     Type: AWS::Serverless::Function
@@ -993,6 +1408,74 @@ Resources:
               - dynamodb:ConditionCheckItem
             Resource: "*"
   # define the Lambda function and its code
+  SendToQueue310arm:
+    Type: AWS::Serverless::Function
+    DependsOn: TriggerNeededLayersV2310arm
+    Properties:
+      CodeUri: src/
+      FunctionName: send_to_queue_310arm
+      Handler: send_to_queue.lambda_handler
+      Runtime: python3.10
+      Architectures: 
+        - arm64
+      Description: Checks If A Layer Exists When Someone Submits Python 3.10 arm And Sends To Queue
+      Timeout: 10
+      Environment:
+        Variables:
+          WEBSOCKET_CONNECTIONS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-websocket-connections"
+          ERROR_LAYERS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-error-layers"
+          S3_BUCKET: !Sub "easy-layers-dev-${AWS::Region}"
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ApiGatewayBackend
+            Path: /create_layer310arm
+            Method: post
+      Layers:
+        - !GetAtt TriggerNeededLayersV2310arm.jsonschema
+        - !GetAtt TriggerNeededLayersV2310arm.requests
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+              - sqs:ReceiveMessage
+            Resource:
+              - "*"
+          - Sid: VisualEditor4
+            Effect: Allow
+            Action:
+              - lambda:ListFunctions
+              - lambda:ListLayerVersions
+              - lambda:ListLayers
+              - lambda:GetLayerVersion
+            Resource: "*"
+          - Sid: VisualEditor5
+            Effect: Allow
+            Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:ConditionCheckItem
+            Resource: "*"
+  
   SendToQueue39arm:
     Type: AWS::Serverless::Function
     DependsOn: TriggerNeededLayersV239arm
@@ -1128,9 +1611,97 @@ Resources:
               - dynamodb:Scan
               - dynamodb:ConditionCheckItem
             Resource: "*"
-              
 
   # define the Lambda functions that create layers and its code
+  CreateLayer310x86:
+    Type: AWS::Serverless::Function
+    DependsOn: TriggerNeededLayersV2310x86
+    Properties:
+      CodeUri: src/
+      FunctionName: create_layer_easy_layers_310x86
+      Handler: create_layer.lambda_handler
+      Runtime: python3.10
+      Architectures: 
+        - x86_64
+      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.10 x86
+      Timeout: 300
+      Environment:
+        Variables:
+          WEBSOCKET_CONNECTIONS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-websocket-connections"
+          ERROR_LAYERS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-error-layers"
+          S3_BUCKET: !Sub "easy-layers-dev-${AWS::Region}"
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt Py310x86SqsQueue.Arn
+            BatchSize: 1
+      Layers:
+        - !GetAtt TriggerNeededLayersV2310x86.jsonschema
+        - !GetAtt TriggerNeededLayersV2310x86.requests
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Sid: VisualEditor0
+            Effect: Allow
+            Action:
+              - lambda:ListFunctions
+              - lambda:ListLayerVersions
+              - lambda:ListLayers
+            Resource: "*"
+          - Sid: VisualEditor1
+            Effect: Allow
+            Action:
+              - lambda:GetLayerVersion
+              - lambda:DeleteLayerVersion
+              - lambda:AddLayerVersionPermission
+            Resource: "*"
+          - Sid: VisualEditor2
+            Effect: Allow
+            Action:
+              - s3:PutObject
+              - s3:GetObjectAcl
+              - s3:GetObject
+              - logs:CreateLogStream
+              - lambda:PublishLayerVersion
+              - s3:ListBucket
+              - logs:PutLogEvents
+            Resource:
+              - "*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+              - sqs:ReceiveMessage
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+            Resource:
+              - "*"
+          - Sid: VisualEditor4
+            Effect: Allow
+            Action:
+              - execute-api:Invoke
+              - execute-api:ManageConnections
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:ConditionCheckItem
+            Resource:
+              - "*"
+              
   CreateLayer39x86:
     Type: AWS::Serverless::Function
     DependsOn: TriggerNeededLayersV239x86
@@ -1309,6 +1880,95 @@ Resources:
             Resource:
               - "*"
   # define the Lambda function and its code
+  CreateLayer310arm:
+    Type: AWS::Serverless::Function
+    DependsOn: TriggerNeededLayersV2310arm
+    Properties:
+      CodeUri: src/
+      FunctionName: create_layer_easy_layers_310arm
+      Handler: create_layer.lambda_handler
+      Runtime: python3.10
+      Architectures: 
+        - arm64
+      Description: Creates & Checks If A Layer Exists When Someone Submits Python 3.10 arm
+      Timeout: 300
+      Environment:
+        Variables:
+          WEBSOCKET_CONNECTIONS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-websocket-connections"
+          ERROR_LAYERS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-error-layers"
+          S3_BUCKET: !Sub "easy-layers-dev-${AWS::Region}"
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt Py310ArmSqsQueue.Arn
+            BatchSize: 1
+      Layers:
+        - !GetAtt TriggerNeededLayersV2310arm.jsonschema
+        - !GetAtt TriggerNeededLayersV2310arm.requests
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Sid: VisualEditor0
+            Effect: Allow
+            Action:
+              - lambda:ListFunctions
+              - lambda:ListLayerVersions
+              - lambda:ListLayers
+            Resource: "*"
+          - Sid: VisualEditor1
+            Effect: Allow
+            Action:
+              - lambda:GetLayerVersion
+              - lambda:DeleteLayerVersion
+              - lambda:AddLayerVersionPermission
+            Resource: "*"
+          - Sid: VisualEditor2
+            Effect: Allow
+            Action:
+              - s3:PutObject
+              - s3:GetObjectAcl
+              - s3:GetObject
+              - logs:CreateLogStream
+              - lambda:PublishLayerVersion
+              - s3:ListBucket
+              - logs:PutLogEvents
+            Resource:
+              - "*"
+          - Sid: VisualEditor3
+            Effect: Allow
+            Action:
+              - sqs:SendMessage
+              - sqs:ReceiveMessage
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+            Resource:
+              - "*"
+          - Sid: VisualEditor4
+            Effect: Allow
+            Action:
+              - execute-api:Invoke
+              - execute-api:ManageConnections
+              - dynamodb:BatchGetItem
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:ConditionCheckItem
+            Resource:
+              - "*"
+              
   CreateLayer39arm:
     Type: AWS::Serverless::Function
     DependsOn: TriggerNeededLayersV239arm
