@@ -1215,7 +1215,7 @@ Resources:
       Architectures: 
         - x86_64
       Description: Checks If A Layer Exists When Someone Submits Python 3.10 x86 And Sends To Queue
-      Timeout: 10
+      Timeout: 30
       Environment:
         Variables:
           WEBSOCKET_CONNECTIONS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-websocket-connections"
@@ -1283,7 +1283,7 @@ Resources:
       Architectures: 
         - x86_64
       Description: Checks If A Layer Exists When Someone Submits Python 3.9 x86 And Sends To Queue
-      Timeout: 10
+      Timeout: 30
       Environment:
         Variables:
           WEBSOCKET_CONNECTIONS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-websocket-connections"
@@ -1351,7 +1351,7 @@ Resources:
       Architectures: 
         - x86_64
       Description: Checks If A Layer Exists When Someone Submits Python 3.8 x86 And Sends To Queue
-      Timeout: 10
+      Timeout: 30
       Environment:
         Variables:
           WEBSOCKET_CONNECTIONS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-websocket-connections"
@@ -1419,7 +1419,7 @@ Resources:
       Architectures: 
         - arm64
       Description: Checks If A Layer Exists When Someone Submits Python 3.10 arm And Sends To Queue
-      Timeout: 10
+      Timeout: 30
       Environment:
         Variables:
           WEBSOCKET_CONNECTIONS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-websocket-connections"
@@ -1487,7 +1487,7 @@ Resources:
       Architectures: 
         - arm64
       Description: Checks If A Layer Exists When Someone Submits Python 3.9 arm And Sends To Queue
-      Timeout: 10
+      Timeout: 30
       Environment:
         Variables:
           WEBSOCKET_CONNECTIONS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-websocket-connections"
@@ -1555,7 +1555,7 @@ Resources:
       Architectures: 
         - arm64
       Description: Checks If A Layer Exists When Someone Submits Python 3.8 arm And Sends To Queue
-      Timeout: 10
+      Timeout: 30
       Environment:
         Variables:
           WEBSOCKET_CONNECTIONS_TABLE: !Sub "easy-layers-dev-${AWS::Region}-websocket-connections"
