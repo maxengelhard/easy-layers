@@ -2536,6 +2536,50 @@ Resources:
               Resource: 
                 - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/get_error_layers_easy_layers:*"
 
+
+  GenerateZipUrl:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      FunctionName: generate_pre_signed_zip_url
+      Handler: generate_zip.lambda_handler
+      Runtime: python3.9
+      Architectures: 
+        - x86_64
+      Description: Generates A PreSigned URL for users to download
+      Timeout: 300
+      Environment:
+        Variables:
+          S3_BUCKET: !Sub "easy-layers-dev-${AWS::Region}" 
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ApiGatewayBackend
+            Path: /generate_zip
+            Method: post
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action: 
+              - logs:CreateLogGroup
+            Resource: 
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource:
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+            Resource:
+              - "*"
+
+
+
   ProcessStripe:
     Type: AWS::Serverless::Function
     DependsOn: TriggerNeededLayersV239x86
