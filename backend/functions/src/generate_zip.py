@@ -3,7 +3,7 @@ import boto3
 import platform
 import sys
 import os
-from lambda_decorators import json_http_resp,cors_headers
+from lambda_decorators import json_http_resp,cors_headers,load_json_body
 
 
 Lambda = boto3.client('lambda')
@@ -11,6 +11,7 @@ s3 = boto3.client('s3')
 s3_bucket = os.environ['S3_BUCKET']
 
 @cors_headers
+@load_json_body
 @json_http_resp
 def lambda_handler(event, context):
     """
@@ -24,6 +25,8 @@ def lambda_handler(event, context):
     Returns:
         str: The pre-signed URL.
     """
+    print(event)
+    print(event['body'])
     object_key = event['body']['key']
     response = s3.generate_presigned_url(
         'get_object',

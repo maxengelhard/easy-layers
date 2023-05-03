@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import axios from 'axios'
 import copyLogo from '../copy.png';
+import downloadicon from '../download-icon.png'
 
 /* components */
 import DropdownMenu from '../components/dropDownMenu';
@@ -16,6 +17,8 @@ const ExistingLayers = () => {
   const [selectedlibrary, setselectedLibrary] = useState('All');
   const [selectedRunTime, setselectedRuntime] = useState('All');
   const [selectedArchitecture, setselectedArchitecture] = useState('All');
+  const [downloadLink,setDownloadLink] = useState(null)
+  const [arn,setArn] = useState(null)
 
   
   
@@ -47,6 +50,17 @@ const ExistingLayers = () => {
 
     fetchData()
   },[selectedRegion])
+
+
+  const downloadzip = async (key,arn) => {
+    const api_gateway = `https://api-${selectedRegion}.easylayers.dev/generate_zip`
+     await axios.post(`${api_gateway}` ,JSON.stringify({"key": `layers_repository/${key}.zip` }))
+     .then(result => {
+      setDownloadLink(result.data)
+      setArn(arn)
+     })
+
+  }
 
 
 
@@ -118,6 +132,7 @@ const ExistingLayers = () => {
                         {/* <th className='layer_created_date'>Created Date</th> */}
                         <th className='layer_runtimes'>Runtime</th>
                         <th className='layer_architectures'>Architecture</th>
+                        <th className='layer_download'>Zip</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -146,6 +161,7 @@ const ExistingLayers = () => {
                             {/* <td className='layer_created_date'>{version_data.LatestMatchingVersion.CreatedDate.substring(0,10)}</td>  */}
                             <td className='layer_runtimes'>{version_data.LatestMatchingVersion.CompatibleRuntimes[0]}</td>
                             <td className='layer_architectures'>{JSON.stringify(version_data.LatestMatchingVersion.CompatibleArchitectures) ? JSON.stringify(version_data.LatestMatchingVersion.CompatibleArchitectures).slice(1,-1).replaceAll('"','') : null}</td>
+                            <td className='layer_download' onClick={() => downloadzip(version_data.LatestMatchingVersion.LayerVersionArn.split(':').slice(-2)[0],version_data.LatestMatchingVersion.LayerVersionArn)}>{downloadLink && version_data.LatestMatchingVersion.LayerVersionArn===arn ? <a href={downloadLink}><img className='linked' src={downloadicon} alt='downloadicon'></img></a> : <img src={downloadicon} alt='downloadicon'></img>}</td>
                           </tr>
                         )
                       })}

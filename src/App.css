@@ -333,7 +333,20 @@ td img {
 }
 
 .layer_architectures {
-  width: 20%;
+  width: 10%;
+}
+
+.layer_download {
+  width: 10%;
+}
+
+td.layer_download:active {
+  /* style applied when the component is being clicked or activated */
+  background-color: #eee;
+}
+
+.linked {
+  background-color: #007bff;
 }
 
 /* loading */
