@@ -1033,7 +1033,7 @@ Resources:
     Properties:
       QueueName: py-310-x86-sqs-queue
       VisibilityTimeout: 310
-      ReceiveMessageWaitTimeSeconds: 10
+      ReceiveMessageWaitTimeSeconds: 20
       RedrivePolicy: 
         deadLetterTargetArn: 
           Fn::GetAtt: 
@@ -1062,7 +1062,7 @@ Resources:
     Properties:
       QueueName: py-310-arm-sqs-queue
       VisibilityTimeout: 310
-      ReceiveMessageWaitTimeSeconds: 10
+      ReceiveMessageWaitTimeSeconds: 20
       RedrivePolicy: 
         deadLetterTargetArn: 
           Fn::GetAtt: 
@@ -1091,7 +1091,7 @@ Resources:
     Properties:
       QueueName: py-39-x86-sqs-queue
       VisibilityTimeout: 310
-      ReceiveMessageWaitTimeSeconds: 10
+      ReceiveMessageWaitTimeSeconds: 20
       RedrivePolicy: 
         deadLetterTargetArn: 
           Fn::GetAtt: 
@@ -1120,7 +1120,7 @@ Resources:
     Properties:
       QueueName: py-38-x86-sqs-queue
       VisibilityTimeout: 310
-      ReceiveMessageWaitTimeSeconds: 10
+      ReceiveMessageWaitTimeSeconds: 20
       RedrivePolicy: 
         deadLetterTargetArn: 
           Fn::GetAtt: 
@@ -1149,7 +1149,7 @@ Resources:
     Properties:
       QueueName: py-39-arm-sqs-queue
       VisibilityTimeout: 310
-      ReceiveMessageWaitTimeSeconds: 10
+      ReceiveMessageWaitTimeSeconds: 20
       RedrivePolicy: 
         deadLetterTargetArn: 
           Fn::GetAtt: 
@@ -1178,7 +1178,7 @@ Resources:
     Properties:
       QueueName: py-38-arm-sqs-queue
       VisibilityTimeout: 310
-      ReceiveMessageWaitTimeSeconds: 10
+      ReceiveMessageWaitTimeSeconds: 20
       RedrivePolicy: 
         deadLetterTargetArn: 
           Fn::GetAtt: 
